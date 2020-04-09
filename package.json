@@ -1,0 +1,33 @@
+{
+  "name": "controles",
+  "version": "1.0.0",
+  "description": "Controles para VR threeJS, in development",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "start:dev": "webpack-dev-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "lodash": "^4.17.15",
+    "three": "^0.115.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "dat.gui": "^0.7.7"
+  },
+  "main": "webpack.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KharleannCF/Controles3JS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KharleannCF/Controles3JS/issues"
+  },
+  "homepage": "https://github.com/KharleannCF/Controles3JS#readme"
+}
