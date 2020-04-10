@@ -34,10 +34,10 @@ function main() {
 		alert('Bang!');
 		},
 
-		posX: 10, 
-		posY: 50, 
-		posZ: 100,
-		colorL: [ 0, 128, 255 ], // RGB array
+		posX: 1, 
+		posY: 1, 
+		posZ: 20,
+		colorL: "#ffffff", // RGB array
 		
 		color0: "#ffae23", // CSS string
 		color1: [ 0, 128, 255 ], // RGB array
@@ -68,20 +68,20 @@ function main() {
 	f1.add(obj, 'posZ');
 	f1.addColor(obj, 'colorL');
 
-	var f1 = gui.addFolder('Colors');
-	f1.addColor(obj, 'color0');
-	f1.addColor(obj, 'color1');
-	f1.addColor(obj, 'color2');
-	f1.addColor(obj, 'color3');
+	// var f1 = gui.addFolder('Colors');
+	// f1.addColor(obj, 'color0');
+	// f1.addColor(obj, 'color1');
+	// f1.addColor(obj, 'color2');
+	// f1.addColor(obj, 'color3');
 
-	var f2 = gui.addFolder('Another Folder');
-	f2.add(obj, 'noiseStrength');
+	// var f2 = gui.addFolder('Another Folder');
+	// f2.add(obj, 'noiseStrength');
 
-	var f3 = f2.addFolder('Nested Folder');
-	f3.add(obj, 'growthSpeed');
+	// var f3 = f2.addFolder('Nested Folder');
+	// f3.add(obj, 'growthSpeed');
 
 	const renderer = new THREE.WebGLRenderer({canvas});
-	renderer.setClearColor(0x000000);
+	renderer.setClearColor(0x222222);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMap.enabled = true;
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
@@ -98,20 +98,21 @@ function main() {
 	camera.position.z = 40;
 	camera.lookAt(scene.position);
 	//SpotLight
-	var spotLight = new THREE.SpotLight( 0xffffff );
+	var spotLight = new THREE.SpotLight( 0xffff00 );
 	spotLight.castShadow = true;            // default false
 
-	spotLight.position.set( 10, 50, 100 );
+	spotLight.position.set( 1, 1, 20 );
 
 	spotLight.shadow.mapSize.width = 1024;
 	spotLight.shadow.mapSize.height = 1024;
 
-	spotLight.shadow.camera.near = 500;
-	spotLight.shadow.camera.far = 4000;
+	spotLight.shadow.camera.near = 1;
+	spotLight.shadow.camera.far = 1000;
 	spotLight.shadow.camera.fov = 30;
 
 	scene.add( spotLight );
-	
+	var spotLightHelper = new THREE.SpotLightHelper( spotLight );
+	scene.add( spotLightHelper );
 	//Cube
 	const boxWidth = 5;
 	const boxHeight = 5;
@@ -123,30 +124,38 @@ function main() {
 	const cube = new THREE.Mesh(geometry, material);
 	cube.castShadow = true; //default is false
 	cube.receiveShadow = false; //default	
-	cube.position.z = 10;
+	cube.position.z = 5;
 
 	scene.add(cube);
+	
+	//Create a sphere that cast shadows (but does not receive them)
+	var sphereGeometry = new THREE.SphereBufferGeometry( 1, 12, 12 );
+	var sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xaa0000 } );
+	var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+	sphere.castShadow = true; //default is false
+	sphere.receiveShadow = false; //default	
+	
+	sphere.position.x = 10;
+	sphere.position.z = 5;
+	
+	scene.add( sphere );
 
 	//Create a plane that receives shadows (but does not cast them)
 	var planeGeometry = new THREE.PlaneBufferGeometry( 20, 20, 32, 32 );
 	var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
 	var plane = new THREE.Mesh( planeGeometry, planeMaterial );
 	plane.receiveShadow = true;
-	scene.add( plane );
 
-	//Create a sphere that cast shadows (but does not receive them)
-	var sphereGeometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
-	var sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
-	var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-	sphere.castShadow = true; //default is false
-	sphere.receiveShadow = false; //default
-	scene.add( sphere );
+	scene.add( plane );
+	
 	function render(time) {
 	  	time *= 0.001;  // convert time to seconds
 		spotLight.position.x = obj.posX;
 		spotLight.position.y = obj.posY;
 		spotLight.position.z = obj.posZ;
-	
+		var colorL = new THREE.Color( obj.colorL );
+		spotLight.color.set(obj.colorL);
+		
 		// cube.rotation.x = time;
 		// cube.rotation.y = time;
 
