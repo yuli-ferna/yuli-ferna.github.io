@@ -19,7 +19,8 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
-    "dat.gui": "^0.7.7"
+    "dat.gui": "^0.7.7",
+    "stats.js": "^0.17.0"
   },
   "main": "webpack.config.js",
   "repository": {
