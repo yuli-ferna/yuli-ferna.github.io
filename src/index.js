@@ -15,10 +15,22 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 const canvas = document.getElementById('canvas');
 
+// var renderer, scene, camera;
+
+// var spotLight, lightHelper, shadowCameraHelper;
+
+var gui;
+var obj ;
+
+function init() {
+	gui = new dat.gui.GUI();
+	
+}
+init();
 function main() {
 //	const canvas = document.querySelector('#c');
 
-	var obj = {
+	obj = {
 		message: 'Hello World',
 		displayOutline: false,
 
@@ -41,38 +53,26 @@ function main() {
 		posZ: 42,
 		colorL: "#ffffff", // RGB array
 		penunmbra: 0.2,
-		intensity:1,
+		helpSpot:true,
+
+		intSpot:1,
+		intHemis:1,
+		intAmbien:1,
+
+		intPoint1: 1,
+		intPoint2: 1,
+		intPoint3: 1,
+		intPoint4: 1,
+		helpPoint1:false,
+		helpPoint2:false,
+		helpPoint3:false,
+		helpPoint4:false,
 		
+
 		color0: "#000000", // CSS string
 		colorg: "#23ae23", // CSS string
 	};
 
-	var gui = new dat.gui.GUI();
-
-	// gui.remember(obj);
-
-	// gui.add(obj, 'message');
-	// gui.add(obj, 'displayOutline');
-	// gui.add(obj, 'explode');
-
-	// gui.add(obj, 'height').step(5); // Increment amount
-
-	// // Choose from accepted values
-	// gui.add(obj, 'type', [ 'one', 'two', 'three' ] );
-
-	// // Choose from named values
-	// gui.add(obj, 'speed', { Stopped: 0, Slow: 0.1, Fast: 5 } );
-	
-	
-	// f1.addColor(obj, 'color1');
-	// f1.addColor(obj, 'color2');
-	// f1.addColor(obj, 'color3');
-
-	// var f2 = gui.addFolder('Another Folder');
-	// f2.add(obj, 'noiseStrength');
-
-	// var f3 = f2.addFolder('Nested Folder');
-	// f3.add(obj, 'growthSpeed');
 
 	const renderer = new THREE.WebGLRenderer({canvas});
 	renderer.setClearColor(0x222222);
@@ -93,11 +93,11 @@ function main() {
 	camera.lookAt(scene.position);
 
 
-	// var controls = new OrbitControls( camera, renderer.domElement );
-	// controls.addEventListener( 'change', render );
-	// controls.minDistance = 20;
-	// controls.maxDistance = 500;
-	// controls.enablePan = false;
+	var controls = new OrbitControls( camera, renderer.domElement );
+	controls.addEventListener( 'change', render );
+	controls.minDistance = 20;
+	controls.maxDistance = 500;
+	controls.enablePan = false;
 
 	//SpotLight
 	var spotLight = new THREE.SpotLight( 0xffff00 );
@@ -114,7 +114,7 @@ function main() {
 
 	scene.add( spotLight );
 	var spotLightHelper = new THREE.SpotLightHelper( spotLight );
-	//scene.add( spotLightHelper );
+	scene.add( spotLightHelper );
 
 	//Ambient light
 	var light = new THREE.AmbientLight( obj.color0 ); // soft white light
@@ -129,17 +129,30 @@ function main() {
 	light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xff0040 } ) ) );
 	scene.add( light1 );
 
+	var pLightHelper1 = new THREE.PointLightHelper( light1 );
+	pLightHelper1.visible = false;
+	scene.add( pLightHelper1 );
+
 	light2 = new THREE.PointLight( 0x0040ff, 2, 50 );
 	light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x0040ff } ) ) );
 	scene.add( light2 );
+	var pLightHelper2 = new THREE.PointLightHelper( light2 );
+	pLightHelper2.visible = false;
+	scene.add( pLightHelper2 );
 
 	light3 = new THREE.PointLight( 0x80ff80, 2, 50 );
 	light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x80ff80 } ) ) );
 	scene.add( light3 );
+	var pLightHelper3 = new THREE.PointLightHelper( light3 );
+	pLightHelper3.visible = false;
+	scene.add( pLightHelper3 );
 
 	light4 = new THREE.PointLight( 0xffaa00, 2, 50 );
 	light4.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffaa00 } ) ) );
 	scene.add( light4 );
+	var pLightHelper4 = new THREE.PointLightHelper( light4 );
+	pLightHelper4.visible = false;
+	scene.add( pLightHelper4 );
 
 	//Cube
 	const boxWidth = 5;
@@ -194,6 +207,9 @@ function main() {
 
 
 	var f1 = gui.addFolder('SpotLight');
+	f1.add(obj, 'helpSpot').onChange(function (val) {
+		spotLightHelper.visible = val;
+	});
 	f1.add(obj, 'posX').onChange(function (val) {
 		spotLight.position.x = val;
 	});
@@ -209,20 +225,57 @@ function main() {
 	f1.add(obj, 'penunmbra').min(0).max(1).step(0.1).onChange(function (val) {
 		spotLight.penunmbra = val;
 	});
-	f1.add(obj, 'intensity').min(0).max(1).step(0.1).onChange(function (val) {
+	f1.add(obj, 'intSpot').min(0).max(1).step(0.1).onChange(function (val) {
 		spotLight.intensity = val;
-	});
+	}).name('Intensity');
 
 	var f2 = gui.addFolder('AmbientLight');
 	f2.addColor(obj, 'color0').onChange(function (val) {
 		light.color.set(val);
 		hemisLight.color.set(val);
 	});
+	f2.add(obj, 'intAmbien').min(0).max(1).step(0.1).onChange(function (val) {
+		light.intensity = val;
+	}).name('Intensity');
 
 	var f3 = gui.addFolder('HemisphereLight');
 	f3.addColor(obj, 'colorg').onChange(function (val) {
 		hemisLight.groundColor.set(val);
 	});
+	f3.add(obj, 'intHemis').min(0).max(1).step(0.1).onChange(function (val) {
+		hemisLight.intensity = val;
+	}).name('Intensity');
+
+	var f4 = gui.addFolder('PointLights');
+	
+	f4.add(obj, 'intPoint1').min(0).max(1).step(0.1).onChange(function (val) {
+		light1.intensity = val;
+	}).name('Intensity point 1');
+	f4.add(obj, 'helpPoint1').onChange(function (val) {
+		pLightHelper1.visible = val;
+	}).name('Helper light 1');
+
+	f4.add(obj, 'intPoint2').min(0).max(1).step(0.1).onChange(function (val) {
+		light2.intensity = val;
+	}).name('Intensity point 2');
+	f4.add(obj, 'helpPoint2').onChange(function (val) {
+		pLightHelper2.visible = val;
+	}).name('Helper light 2');
+	
+	f4.add(obj, 'intPoint3').min(0).max(1).step(0.1).onChange(function (val) {
+		light3.intensity = val;
+	}).name('Intensity point 3');
+	f4.add(obj, 'helpPoint3').onChange(function (val) {
+		pLightHelper3.visible = val;
+	}).name('Helper light 3');
+	
+	f4.add(obj, 'intPoint4').min(0).max(1).step(0.1).onChange(function (val) {
+		light4.intensity = val;
+	}).name('Intensity point 4');
+	f4.add(obj, 'helpPoint4').onChange(function (val) {
+		pLightHelper4.visible = val;
+	}).name('Helper light 4');
+	
 	// controls.target.copy( plane.position );
 	// controls.update();
 	function displayWindowSize(){

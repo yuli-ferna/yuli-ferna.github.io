@@ -22,13 +22,6 @@
     "dat.gui": "^0.7.7",
     "stats.js": "^0.17.0"
   },
-  "main": "webpack.config.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KharleannCF/Controles3JS.git"
-  },
-  "bugs": {
-    "url": "https://github.com/KharleannCF/Controles3JS/issues"
-  },
-  "homepage": "https://github.com/KharleannCF/Controles3JS#readme"
+  "main": "webpack.config.js"
+  
 }
