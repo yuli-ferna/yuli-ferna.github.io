@@ -70,7 +70,7 @@ function init()
 		colorg: "#23ae23", 
 	};
 	
-	renderer = new THREE.WebGLRenderer({canvas});
+	renderer = new THREE.WebGLRenderer({ canvas });
 	scene = new THREE.Scene();
 	const fov = 45;
 	const aspect =  window.innerWidth/ window.innerHeight;  // the canvas default
@@ -312,33 +312,36 @@ function displayWindowSize(){
 // Attaching the event listener function to window's resize event
 window.addEventListener("resize", displayWindowSize);
 
-function render(time) {
-	stats.begin();
-		time *= 0.001;  // convert time to seconds
-		light1.position.x = Math.sin( time * 0.7 ) * 30;
-		light1.position.y = Math.cos( time * 0.5 ) * 40;
-		light1.position.z = Math.cos( time * 0.3 ) * 30;
+function animate() 
+{
+	requestAnimationFrame(animate);
+	render();
+	controls.update();
 
-		light2.position.x = Math.cos( time * 0.3 ) * 30;
-		light2.position.y = Math.sin( time * 0.5 ) * 40;
-		light2.position.z = Math.sin( time * 0.7 ) * 30;
+	stats.update();	
+}
 
-		light3.position.x = Math.sin( time * 0.7 ) * 30;
-		light3.position.y = Math.cos( time * 0.3 ) * 40;
-		light3.position.z = Math.sin( time * 0.5 ) * 30;
+function render() 
+{
+	var time = Date.now() * 0.0001;  // convert time to seconds
+	light1.position.x = Math.sin( time * 0.7 ) * 30;
+	light1.position.y = Math.cos( time * 0.5 ) * 40;
+	light1.position.z = Math.cos( time * 0.3 ) * 30;
 
-		light4.position.x = Math.sin( time * 0.3 ) * 30;
-		light4.position.y = Math.cos( time * 0.7 ) * 40;
-		light4.position.z = Math.sin( time * 0.5 ) * 30;
+	light2.position.x = Math.cos( time * 0.3 ) * 30;
+	light2.position.y = Math.sin( time * 0.5 ) * 40;
+	light2.position.z = Math.sin( time * 0.7 ) * 30;
 
+	light3.position.x = Math.sin( time * 0.7 ) * 30;
+	light3.position.y = Math.cos( time * 0.3 ) * 40;
+	light3.position.z = Math.sin( time * 0.5 ) * 30;
 
-		renderer.render(scene, camera);
-	stats.end();
-
-
-	requestAnimationFrame(render);
+	light4.position.x = Math.sin( time * 0.3 ) * 30;
+	light4.position.y = Math.cos( time * 0.7 ) * 40;
+	light4.position.z = Math.sin( time * 0.5 ) * 30;
+	renderer.render(scene, camera);
 }
 
 init();
 main();
-requestAnimationFrame(render);
+animate();
