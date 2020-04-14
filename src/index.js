@@ -13,40 +13,38 @@ const Stats = require('stats.js');
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //controles por teclado
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+import { LightShadow } from 'three';
+
 const canvas = document.getElementById('canvas');
 
-// var renderer, scene, camera;
+//Scene and render
+var renderer, scene, camera;
+var controls;
 
-// var spotLight, lightHelper, shadowCameraHelper;
+//Lights
+var spotLight, light, hemisLight;
+var light1, light2, light3, light4;
+var spotLightHelper, pLightHelper1, pLightHelper2, pLightHelper3, pLightHelper4;
 
+//Interface
 var gui;
-var obj ;
+var obj;
+var stats;
 
-function init() {
+//Models
+var sphere;
+var torusKnot;
+var plane;
+
+function init() 
+{
+	//DAT GUI
 	gui = new dat.gui.GUI();
-	
-}
-init();
-function main() {
-//	const canvas = document.querySelector('#c');
-
 	obj = {
-		message: 'Hello World',
-		displayOutline: false,
-
-		maxSize: 6.0,
-		speed: 5,
-
-		height: 10,
-		noiseStrength: 10.2,
-		growthSpeed: 0.2,
-
-		type: 'three',
-
 		explode: function () {
 		alert('Bang!');
 		},
-
+	
 		//spotlight
 		posX: -0.6, 
 		posY: 20, 
@@ -54,11 +52,9 @@ function main() {
 		colorL: "#ffffff", // RGB array
 		penunmbra: 0.2,
 		helpSpot:true,
-
 		intSpot:1,
-		intHemis:1,
-		intAmbien:1,
-
+	
+		
 		intPoint1: 1,
 		intPoint2: 1,
 		intPoint3: 1,
@@ -68,123 +64,224 @@ function main() {
 		helpPoint3:false,
 		helpPoint4:false,
 		
-
-		color0: "#000000", // CSS string
-		colorg: "#23ae23", // CSS string
+		intAmbien:1,
+		color0: "#000000", 
+		intHemis:1,
+		colorg: "#23ae23", 
 	};
-
-
-	const renderer = new THREE.WebGLRenderer({canvas});
-	renderer.setClearColor(0x222222);
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 	
+	renderer = new THREE.WebGLRenderer({canvas});
+	scene = new THREE.Scene();
 	const fov = 45;
 	const aspect =  window.innerWidth/ window.innerHeight;  // the canvas default
 	const near = 0.1;
 	const far = 100;
-	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-	//camera.position.z = 2;
-	const scene = new THREE.Scene();
-	camera.position.x = 40;
-	camera.position.y = 40;
-	camera.position.z = 40;
-	camera.lookAt(scene.position);
+	camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+	controls = new OrbitControls( camera, renderer.domElement );
+	
+	//Lights
+	spotLight = new THREE.SpotLight( 0xffff00 );
+	spotLightHelper = new THREE.SpotLightHelper( spotLight );
+	light = new THREE.AmbientLight( obj.color0 ); // soft white light
+	hemisLight = new THREE.HemisphereLight( obj.color0, obj.colorg, 1 );
+	
+	//Models in scene
+	
+	//Create a sphere that cast shadows (but does not receive them)
+	var sphereGeometry = new THREE.SphereBufferGeometry( 5, 12, 12 );
+	var sphereMaterial = new THREE.MeshPhongMaterial( { color: 0xaaaaaa } );
+	sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+	
+	//Create a torusKnot that cast shadows (but does not receive them)
+	var geometryT = new THREE.TorusKnotBufferGeometry( 5, 3, 100, 16 );
+	// var materialT = new THREE.MeshPhongMaterial( { color: 0x79c4ed } );
+	torusKnot = new THREE.Mesh( geometryT, sphereMaterial );
+	
+	//Create a plane that receives shadows (but does not cast them)
+	var planeGeometry = new THREE.PlaneBufferGeometry( 100, 100, 32, 32 );
+	var planeMaterial = new THREE.MeshLambertMaterial( { color: 0x444444 } )
+	plane = new THREE.Mesh( planeGeometry, planeMaterial );
 
+	stats = new Stats();
+}
 
-	var controls = new OrbitControls( camera, renderer.domElement );
-	controls.addEventListener( 'change', render );
-	controls.minDistance = 20;
-	controls.maxDistance = 500;
-	controls.enablePan = false;
-
+function addLights() 
+{
 	//SpotLight
-	var spotLight = new THREE.SpotLight( 0xffff00 );
-	spotLight.castShadow = true;            // default false
-
+	spotLight.castShadow = true;
 	spotLight.position.set( obj.posX, obj.posY, obj.posZ );
-
+	//Shadow spotlight
 	spotLight.shadow.mapSize.width = 1024;
 	spotLight.shadow.mapSize.height = 1024;
-
 	spotLight.shadow.camera.near = 1;
 	spotLight.shadow.camera.far = 1000;
 	spotLight.shadow.camera.fov = 30;
 
 	scene.add( spotLight );
-	var spotLightHelper = new THREE.SpotLightHelper( spotLight );
+	//Helper
 	scene.add( spotLightHelper );
-
+	
 	//Ambient light
-	var light = new THREE.AmbientLight( obj.color0 ); // soft white light
 	scene.add( light );
-
+	
 	//Hemisphere light
-	var hemisLight = new THREE.HemisphereLight( obj.color0, obj.colorg, 1 );
 	scene.add( hemisLight );
-	var light1, light2, light3, light4;
+	
 	//Point lights
+	var sphereL = new THREE.SphereBufferGeometry( 0.5, 16, 8 );
+	
 	light1 = new THREE.PointLight( 0xff0040, 2, 50 );
-	light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xff0040 } ) ) );
+	light1.add( new THREE.Mesh( sphereL, new THREE.MeshBasicMaterial( { color: 0xff0040 } ) ) );
 	scene.add( light1 );
-
-	var pLightHelper1 = new THREE.PointLightHelper( light1 );
+	
+	pLightHelper1 = new THREE.PointLightHelper( light1 );
 	pLightHelper1.visible = false;
 	scene.add( pLightHelper1 );
-
+	
 	light2 = new THREE.PointLight( 0x0040ff, 2, 50 );
-	light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x0040ff } ) ) );
+	light2.add( new THREE.Mesh( sphereL, new THREE.MeshBasicMaterial( { color: 0x0040ff } ) ) );
 	scene.add( light2 );
-	var pLightHelper2 = new THREE.PointLightHelper( light2 );
+	pLightHelper2 = new THREE.PointLightHelper( light2 );
 	pLightHelper2.visible = false;
 	scene.add( pLightHelper2 );
-
+	
 	light3 = new THREE.PointLight( 0x80ff80, 2, 50 );
-	light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0x80ff80 } ) ) );
+	light3.add( new THREE.Mesh( sphereL, new THREE.MeshBasicMaterial( { color: 0x80ff80 } ) ) );
 	scene.add( light3 );
-	var pLightHelper3 = new THREE.PointLightHelper( light3 );
+	pLightHelper3 = new THREE.PointLightHelper( light3 );
 	pLightHelper3.visible = false;
 	scene.add( pLightHelper3 );
-
+	
 	light4 = new THREE.PointLight( 0xffaa00, 2, 50 );
-	light4.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: 0xffaa00 } ) ) );
+	light4.add( new THREE.Mesh( sphereL, new THREE.MeshBasicMaterial( { color: 0xffaa00 } ) ) );
 	scene.add( light4 );
-	var pLightHelper4 = new THREE.PointLightHelper( light4 );
+	pLightHelper4 = new THREE.PointLightHelper( light4 );
 	pLightHelper4.visible = false;
 	scene.add( pLightHelper4 );
 
-	//Cube
-	const boxWidth = 5;
-	const boxHeight = 5;
-	const boxDepth = 5;
-	const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-	//const geometryTourus = new THREE.TourusGeometry(boxWidth, boxHeight, boxDepth);
+}
 
-	const material = new THREE.MeshPhongMaterial( { color: 0xaaaaaa } )
+function addGUI() 
+{
+	stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+	document.body.appendChild( stats.dom );
 
-	const cube = new THREE.Mesh(geometry, material);
-	cube.castShadow = true; //default is false
-	cube.receiveShadow = false; //default	
-	cube.position.z = 5;
+	//Spotlight
+	var guiSL = gui.addFolder('SpotLight');
+	guiSL.add(obj, 'helpSpot').onChange(function (val) {
+		spotLightHelper.visible = val;
+	});
+	guiSL.add(obj, 'posX').onChange(function (val) {
+		spotLight.position.x = val;
+	});
+	guiSL.add(obj, 'posY').onChange(function (val) {
+		spotLight.position.y = val;
+	});
+	guiSL.add(obj, 'posZ').onChange(function (val) {
+		spotLight.position.z = val;
+	});
+	guiSL.addColor(obj, 'colorL').onChange(function (val) {
+		spotLight.color.set(val);
+	});
+	guiSL.add(obj, 'penunmbra').min(0).max(1).step(0.1).onChange(function (val) {
+		spotLight.penunmbra = val;
+	});
+	guiSL.add(obj, 'intSpot').min(0).max(1).step(0.1).onChange(function (val) {
+		spotLight.intensity = val;
+	}).name('Intensity');
 
-	//scene.add(cube);
+	//Ambient Light
+	var guiAL = gui.addFolder('AmbientLight');
+	guiAL.addColor(obj, 'color0').onChange(function (val) {
+		light.color.set(val);
+		hemisLight.color.set(val);
+	});
+	guiAL.add(obj, 'intAmbien').min(0).max(1).step(0.1).onChange(function (val) {
+		light.intensity = val;
+	}).name('Intensity');
+
+	//Hemisphere Light
+	var guiHL = gui.addFolder('HemisphereLight');
+	guiHL.addColor(obj, 'colorg').onChange(function (val) {
+		hemisLight.groundColor.set(val);
+	});
+	guiHL.add(obj, 'intHemis').min(0).max(1).step(0.1).onChange(function (val) {
+		hemisLight.intensity = val;
+	}).name('Intensity');
+
+	//Point Lights
+	var guiPL = gui.addFolder('PointLights');
+
+	// Light 1
+	guiPL.add(obj, 'intPoint1').min(0).max(1).step(0.1).onChange(function (val) {
+		light1.intensity = val;
+	}).name('Intensity point 1');
+	guiPL.add(obj, 'helpPoint1').onChange(function (val) {
+		pLightHelper1.visible = val;
+	}).name('Helper light 1');
+
+	// Light 2
+	guiPL.add(obj, 'intPoint2').min(0).max(1).step(0.1).onChange(function (val) {
+		light2.intensity = val;
+	}).name('Intensity point 2');
+	guiPL.add(obj, 'helpPoint2').onChange(function (val) {
+		pLightHelper2.visible = val;
+	}).name('Helper light 2');
 	
-	//Create a sphere that cast shadows (but does not receive them)
-	var sphereGeometry = new THREE.SphereBufferGeometry( 5, 12, 12 );
-	var sphereMaterial = new THREE.MeshPhongMaterial( { color: 0xaaaaaa } );
-	var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+	// Light 3
+	guiPL.add(obj, 'intPoint3').min(0).max(1).step(0.1).onChange(function (val) {
+		light3.intensity = val;
+	}).name('Intensity point 3');
+	guiPL.add(obj, 'helpPoint3').onChange(function (val) {
+		pLightHelper3.visible = val;
+	}).name('Helper light 3');
+	
+	// Light 4
+	guiPL.add(obj, 'intPoint4').min(0).max(1).step(0.1).onChange(function (val) {
+		light4.intensity = val;
+	}).name('Intensity point 4');
+	guiPL.add(obj, 'helpPoint4').onChange(function (val) {
+		pLightHelper4.visible = val;
+	}).name('Helper light 4');
+	
+}
+
+function main() {
+	
+	//Renderer
+	renderer.setClearColor(0x222222);
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+	
+	//Camera
+	camera.position.x = 40;
+	camera.position.y = 40;
+	camera.position.z = 40;
+	camera.lookAt(scene.position);
+
+	//Orbit controls
+	controls.addEventListener( 'change', render );
+	controls.minDistance = 20;
+	controls.maxDistance = 500;
+	controls.enablePan = false;
+
+	addLights();
+
+	//Models in scene
 	sphere.castShadow = true; //default is false
 	sphere.receiveShadow = false; //default	
 	
 	sphere.position.x = 10;
 	sphere.position.y = 5;
 	sphere.position.z = 5;
-	
 	scene.add( sphere );
-	var geometryT = new THREE.TorusKnotBufferGeometry( 5, 3, 100, 16 );
-	var materialT = new THREE.MeshPhongMaterial( { color: 0x79c4ed } );
-	var torusKnot = new THREE.Mesh( geometryT, materialT );
+	
+	plane.receiveShadow = true;
+	plane.position.y = -5;
+	plane.rotation.x = -0.5 * Math.PI;
+	scene.add( plane );
+	
 	torusKnot.castShadow = true; //default is false
 	torusKnot.receiveShadow = false; //default	
 	torusKnot.position.x = -10;
@@ -192,136 +289,56 @@ function main() {
 	torusKnot.position.z = 5;
 	scene.add( torusKnot );
 	
-	//Create a plane that receives shadows (but does not cast them)
-	var planeGeometry = new THREE.PlaneBufferGeometry( 100, 100, 32, 32 );
-	var planeMaterial = new THREE.MeshLambertMaterial( { color: 0x444444 } )
-	var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-	plane.receiveShadow = true;
-	plane.position.y = -5;
-	plane.rotation.x = -0.5 * Math.PI;
-	scene.add( plane );
-	
-	var stats = new Stats();
-	stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-	document.body.appendChild( stats.dom );
 
-
-	var f1 = gui.addFolder('SpotLight');
-	f1.add(obj, 'helpSpot').onChange(function (val) {
-		spotLightHelper.visible = val;
-	});
-	f1.add(obj, 'posX').onChange(function (val) {
-		spotLight.position.x = val;
-	});
-	f1.add(obj, 'posY').onChange(function (val) {
-		spotLight.position.y = val;
-	});
-	f1.add(obj, 'posZ').onChange(function (val) {
-		spotLight.position.z = val;
-	});
-	f1.addColor(obj, 'colorL').onChange(function (val) {
-		spotLight.color.set(val);
-	});
-	f1.add(obj, 'penunmbra').min(0).max(1).step(0.1).onChange(function (val) {
-		spotLight.penunmbra = val;
-	});
-	f1.add(obj, 'intSpot').min(0).max(1).step(0.1).onChange(function (val) {
-		spotLight.intensity = val;
-	}).name('Intensity');
-
-	var f2 = gui.addFolder('AmbientLight');
-	f2.addColor(obj, 'color0').onChange(function (val) {
-		light.color.set(val);
-		hemisLight.color.set(val);
-	});
-	f2.add(obj, 'intAmbien').min(0).max(1).step(0.1).onChange(function (val) {
-		light.intensity = val;
-	}).name('Intensity');
-
-	var f3 = gui.addFolder('HemisphereLight');
-	f3.addColor(obj, 'colorg').onChange(function (val) {
-		hemisLight.groundColor.set(val);
-	});
-	f3.add(obj, 'intHemis').min(0).max(1).step(0.1).onChange(function (val) {
-		hemisLight.intensity = val;
-	}).name('Intensity');
-
-	var f4 = gui.addFolder('PointLights');
-	
-	f4.add(obj, 'intPoint1').min(0).max(1).step(0.1).onChange(function (val) {
-		light1.intensity = val;
-	}).name('Intensity point 1');
-	f4.add(obj, 'helpPoint1').onChange(function (val) {
-		pLightHelper1.visible = val;
-	}).name('Helper light 1');
-
-	f4.add(obj, 'intPoint2').min(0).max(1).step(0.1).onChange(function (val) {
-		light2.intensity = val;
-	}).name('Intensity point 2');
-	f4.add(obj, 'helpPoint2').onChange(function (val) {
-		pLightHelper2.visible = val;
-	}).name('Helper light 2');
-	
-	f4.add(obj, 'intPoint3').min(0).max(1).step(0.1).onChange(function (val) {
-		light3.intensity = val;
-	}).name('Intensity point 3');
-	f4.add(obj, 'helpPoint3').onChange(function (val) {
-		pLightHelper3.visible = val;
-	}).name('Helper light 3');
-	
-	f4.add(obj, 'intPoint4').min(0).max(1).step(0.1).onChange(function (val) {
-		light4.intensity = val;
-	}).name('Intensity point 4');
-	f4.add(obj, 'helpPoint4').onChange(function (val) {
-		pLightHelper4.visible = val;
-	}).name('Helper light 4');
-	
+	addGUI();
 	// controls.target.copy( plane.position );
 	// controls.update();
-	function displayWindowSize(){
-        // Get width and height of the window excluding scrollbars
-        var w = document.documentElement.clientWidth;
-        var h = document.documentElement.clientHeight;
-        
-		// Display result inside a div element
-		console.log("Width: " + w + ", " + "Height: " + h);
-		renderer.setSize(w, h);
-		// camera.fov = Math.atan(window.innerHeight / 2 / camera.position.z) * 2 * THREE.Math.RAD2DEG;
-		camera.aspect = w / h;
-		camera.updateProjectionMatrix();
-    }
-    
-    // Attaching the event listener function to window's resize event
-	window.addEventListener("resize", displayWindowSize);
 	
-	function render(time) {
-		stats.begin();
-			time *= 0.001;  // convert time to seconds
-			light1.position.x = Math.sin( time * 0.7 ) * 30;
-			light1.position.y = Math.cos( time * 0.5 ) * 40;
-			light1.position.z = Math.cos( time * 0.3 ) * 30;
-
-			light2.position.x = Math.cos( time * 0.3 ) * 30;
-			light2.position.y = Math.sin( time * 0.5 ) * 40;
-			light2.position.z = Math.sin( time * 0.7 ) * 30;
-
-			light3.position.x = Math.sin( time * 0.7 ) * 30;
-			light3.position.y = Math.cos( time * 0.3 ) * 40;
-			light3.position.z = Math.sin( time * 0.5 ) * 30;
-
-			light4.position.x = Math.sin( time * 0.3 ) * 30;
-			light4.position.y = Math.cos( time * 0.7 ) * 40;
-			light4.position.z = Math.sin( time * 0.5 ) * 30;
-
-
-			renderer.render(scene, camera);
-		stats.end();
-
-
-		requestAnimationFrame(render);
-	}
-	requestAnimationFrame(render);
-
 }
 
+function displayWindowSize(){
+	// Get width and height of the window excluding scrollbars
+	var w = document.documentElement.clientWidth;
+	var h = document.documentElement.clientHeight;
+	
+	// Display result inside a div element
+	console.log("Width: " + w + ", " + "Height: " + h);
+	renderer.setSize(w, h);
+	// camera.fov = Math.atan(window.innerHeight / 2 / camera.position.z) * 2 * THREE.Math.RAD2DEG;
+	camera.aspect = w / h;
+	camera.updateProjectionMatrix();
+}
+
+// Attaching the event listener function to window's resize event
+window.addEventListener("resize", displayWindowSize);
+
+function render(time) {
+	stats.begin();
+		time *= 0.001;  // convert time to seconds
+		light1.position.x = Math.sin( time * 0.7 ) * 30;
+		light1.position.y = Math.cos( time * 0.5 ) * 40;
+		light1.position.z = Math.cos( time * 0.3 ) * 30;
+
+		light2.position.x = Math.cos( time * 0.3 ) * 30;
+		light2.position.y = Math.sin( time * 0.5 ) * 40;
+		light2.position.z = Math.sin( time * 0.7 ) * 30;
+
+		light3.position.x = Math.sin( time * 0.7 ) * 30;
+		light3.position.y = Math.cos( time * 0.3 ) * 40;
+		light3.position.z = Math.sin( time * 0.5 ) * 30;
+
+		light4.position.x = Math.sin( time * 0.3 ) * 30;
+		light4.position.y = Math.cos( time * 0.7 ) * 40;
+		light4.position.z = Math.sin( time * 0.5 ) * 30;
+
+
+		renderer.render(scene, camera);
+	stats.end();
+
+
+	requestAnimationFrame(render);
+}
+
+init();
 main();
+requestAnimationFrame(render);
