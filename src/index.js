@@ -423,12 +423,12 @@ function animate()
 	render();
 	// controls.update();
 	stats.update();	
-	if ( hasControlsUpdated ) {
+	// if ( hasControlsUpdated ) {
  
-        renderer.render( scene, camera );
+    //     renderer.render( scene, camera );
  
-    }
-	// renderer.render(scene, camera);
+    // }
+	renderer.render(scene, camera);
 }
 
 function render() 
