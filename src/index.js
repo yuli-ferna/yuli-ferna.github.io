@@ -14,11 +14,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //controles por teclado
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { LightShadow } from 'three';
-
+import CameraControls from 'camera-controls';
+ 
+CameraControls.install( { THREE: THREE } );
 const canvas = document.getElementById('canvas');
-
+const clock = new THREE.Clock();
+ 
 //Scene and render
-var renderer, scene, camera;
+var renderer, scene, camera, cameraControls;
 var controls;
 
 //Lights
@@ -35,6 +38,13 @@ var stats;
 var sphere;
 var torusKnot;
 var plane;
+
+//movement speed variable
+let speedMovement = 500;
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
 
 function init() 
 {
@@ -75,10 +85,15 @@ function init()
 	const fov = 45;
 	const aspect =  window.innerWidth/ window.innerHeight;  // the canvas default
 	const near = 0.1;
-	const far = 100;
+	const far = 500;
 	camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-	controls = new OrbitControls( camera, renderer.domElement );
-	
+	// controls = new OrbitControls( camera, renderer.domElement );
+	cameraControls = new CameraControls( camera, renderer.domElement );
+	cameraControls.setLookAt( 40, 40, 40, 0.0001, 2, 0, false );
+	cameraControls.maxDistance = 0.0001;
+	cameraControls.minDistance = 0;
+	cameraControls.truckSpeed = 2.0;
+
 	//Lights
 	spotLight = new THREE.SpotLight( 0xffff00 );
 	spotLightHelper = new THREE.SpotLightHelper( spotLight );
@@ -246,6 +261,24 @@ function addGUI()
 	
 }
 
+//Move the camera according to a direction, and speed received as parameter event received
+//the delta factor will divide the movement speed by 100 but will make it feel smoother to the controler
+function movement(direction, speed){
+	let delta = clock.getDelta()
+	let moveZ = Number(moveForward) -Number(moveBackward);
+	let moveX = Number(moveRight) - Number(moveLeft);
+
+	if (moveForward || moveBackward) {
+		cameraControls.forward(speed*delta*moveZ,true);
+	}
+	if (moveLeft || moveRight) {
+		cameraControls.truck(speed*delta*moveX,0,true);
+	}
+
+	// if(!audioPlaying(greenSphere)){
+	// 	(colisionDetector(cameraControls, greenSphere)) ? audioManager.startAudio(greenSphere) : false;
+	// }
+}
 function main() {
 	
 	//Renderer
@@ -261,10 +294,10 @@ function main() {
 	camera.lookAt(scene.position);
 
 	//Orbit controls
-	controls.addEventListener( 'change', render );
-	controls.minDistance = 20;
-	controls.maxDistance = 500;
-	controls.enablePan = false;
+	// controls.addEventListener( 'change', render );
+	// controls.minDistance = 20;
+	// controls.maxDistance = 500;
+	// controls.enablePan = false;
 
 	addLights();
 
@@ -295,6 +328,74 @@ function main() {
 	// controls.update();
 	
 }
+//Event function when a key is pressed
+let onKeyDown = function ( event ) {
+	switch ( event.keyCode ) {
+		case 38: // up
+		case 87: // w
+			moveForward = true;
+			movement(moveForward, speedMovement);
+			break;
+		case 37: // left
+		case 65: // a
+			moveLeft = true;
+			movement(moveLeft, speedMovement);
+			break;
+		case 40: // down
+		case 83: // s
+			moveBackward = true;
+			movement(moveBackward, speedMovement);
+			break;
+		case 39: // right
+		case 68: // d
+			moveRight = true;
+			movement(moveRight, speedMovement);
+			break;
+		case 70: //F
+			audioManager.startAudio(redSphere);
+			break;
+		case 67:
+		if(mediaRecorder == null) {
+			catchMicrophone(blueSphere);
+		}else {
+			blueSphere.getObjectByName('audio').setVolume(10);
+		} 
+
+			break;
+		}
+
+};
+//event function that works when a key is released
+let onKeyUp = function ( event ) {
+	switch ( event.keyCode ) {
+		case 38: // up
+		case 87: // w
+			moveForward = false;
+			break;
+		case 37: // left
+		case 65: // a
+			moveLeft = false;
+			break;
+		case 40: // down
+		case 83: // s
+			moveBackward = false;
+			break;
+		case 39: // right
+		case 68: // d
+			moveRight = false;
+			break;
+		case 67:
+			blueSphere.getObjectByName('audio').setVolume(0);
+			break;
+		}
+};
+//event function on click
+//this create all the sounds elements
+const clicker = function(event){
+	principal.style.display = 'none';
+	canvas.style.display = 'block';
+}
+
 
 function displayWindowSize(){
 	// Get width and height of the window excluding scrollbars
@@ -311,19 +412,28 @@ function displayWindowSize(){
 
 // Attaching the event listener function to window's resize event
 window.addEventListener("resize", displayWindowSize);
+document.addEventListener( 'keydown', onKeyDown, false );
+document.addEventListener( 'keyup', onKeyUp, false );
 
 function animate() 
 {
+	const delta = clock.getDelta();
+    const hasControlsUpdated = cameraControls.update( delta );
 	requestAnimationFrame(animate);
 	render();
-	controls.update();
-
+	// controls.update();
 	stats.update();	
+	if ( hasControlsUpdated ) {
+ 
+        renderer.render( scene, camera );
+ 
+    }
+	// renderer.render(scene, camera);
 }
 
 function render() 
 {
-	var time = Date.now() * 0.0001;  // convert time to seconds
+	var time = Date.now() * 0.001;  
 	light1.position.x = Math.sin( time * 0.7 ) * 30;
 	light1.position.y = Math.cos( time * 0.5 ) * 40;
 	light1.position.z = Math.cos( time * 0.3 ) * 30;
@@ -339,7 +449,7 @@ function render()
 	light4.position.x = Math.sin( time * 0.3 ) * 30;
 	light4.position.y = Math.cos( time * 0.7 ) * 40;
 	light4.position.z = Math.sin( time * 0.5 ) * 30;
-	renderer.render(scene, camera);
+	
 }
 
 init();
