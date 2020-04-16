@@ -40,7 +40,7 @@ var torusKnot;
 var plane;
 
 //movement speed variable
-let speedMovement = 500;
+let speedMovement = 300;
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
