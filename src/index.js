@@ -16,6 +16,7 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 import { LightShadow } from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import CameraControls from 'camera-controls';
 
 
@@ -27,7 +28,7 @@ const clock = new THREE.Clock();
 //Scene and render
 var renderer, scene, camera, cameraControls;
 var controls;
-
+var mixer;
 //Lights
 var spotLight, light, hemisLight;
 var light1, light2, light3, light4;
@@ -64,9 +65,9 @@ function init()
 		},
 	
 		//spotlight
-		posX: -0.6, 
-		posY: 20, 
-		posZ: 42,
+		posX: -25, 
+		posY: 8, 
+		posZ: 7,
 		colorL: "#ffffff", // RGB array
 		penunmbra: 0.2,
 		helpSpot:true,
@@ -116,7 +117,7 @@ function addLights()
     spotLight.angle = Math.PI / 16;
     spotLight.penumbra = 0.5;
     spotLight.castShadow = true;
-    spotLight.position.set( - 1, 1, 1 );
+    spotLight.position.set( obj.posX, obj.posY, obj.posZ );
 	scene.add( spotLight );
 	spotLightHelper = new THREE.SpotLightHelper( spotLight );
 	scene.add( spotLightHelper );
@@ -196,9 +197,9 @@ function main() {
 	renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 	
 	//Camera
-	camera.position.x = 4;
-	camera.position.y = 1;
-	camera.position.z = 5;
+	camera.position.x = 14;
+	camera.position.y = 2;
+	camera.position.z = 6;
 	camera.lookAt( 0, 0.1, 0 );
 	// controls = new OrbitControls( camera, renderer.domElement );
 	cameraControls = new CameraControls( camera, renderer.domElement );
@@ -210,7 +211,9 @@ function main() {
 
 	addLights();
 	loadDraco('model/draco/alocasia_s.drc');
-	loadGLTF('model/Duck.gltf');
+	loadGLTF('model/Duck.gltf',[1, -0.05, 0],[0.5, 0.5, 0.5]);
+	loadGLTF('model/Flamingo.glb',[-2, 2, 1],[0.01, 0.01, 0.01]);
+	loadFBX('model/dancing.fbx',[2, 0, -1],[0.01, 0.01, 0.01]);
 	
     var plane = new THREE.Mesh(
         new THREE.PlaneBufferGeometry( 8, 8 ),
@@ -229,7 +232,36 @@ function main() {
 	// controls.update();
 	
 }
-function loadGLTF(path) {
+
+function loadFBX(path,pos,scale) {
+	var loader = new FBXLoader();
+	loader.load( path, function ( object ) {
+
+		mixer = new THREE.AnimationMixer( object );
+		console.log(object);
+		object.scale.set(scale[0], scale[1], scale[2]);
+		object.position.set(pos[0], pos[1], pos[2]);
+
+		var action = mixer.clipAction( object.animations[ 0 ] );
+		action.play();
+			
+		object.traverse( function ( child ) {
+
+			if ( child.isMesh ) {
+
+				child.castShadow = true;
+				child.receiveShadow = true;
+
+			}
+
+		} );
+		console.log(object);
+		
+		scene.add( object );
+
+	} );
+}
+function loadGLTF(path, pos,scale) {
 	// Instantiate a loader
 	var loader = new GLTFLoader();
 
@@ -246,14 +278,14 @@ function loadGLTF(path) {
 		// called when the resource is loaded
 		function ( gltf ) {
 			//Transformations
-			gltf.scene.scale.set(0.5, 0.5, 0.5);
-			gltf.scene.position.set(1, -0.05, 0);
+			gltf.scene.scale.set(scale[0], scale[1], scale[2]);
+			gltf.scene.position.set(pos[0], pos[1], pos[2]);
 			gltf.scene.castShadow = true;
 			gltf.scene.receiveShadow = true;
 
 			scene.add( gltf.scene );
 			console.log(gltf);
-			// gltf.scale.set(2,2,2);
+			
 			gltf.animations; // Array<THREE.AnimationClip>
 			gltf.scene; // THREE.Group
 			gltf.scenes; // Array<THREE.Group>
@@ -376,6 +408,8 @@ function animate()
 	render();
 	// controls.update();
 	stats.update();	
+	
+	if ( mixer ) mixer.update( delta );
 	if ( hasControlsUpdated ) {
  
 		// renderer.render( scene, camera );
