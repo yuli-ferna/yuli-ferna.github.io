@@ -26,7 +26,9 @@ const clock = new THREE.Clock();
  // Optional: Pre-fetch Draco WASM/JS module.
 // dracoLoader.preload();
 //Scene and render
-var renderer, scene, camera, cameraControls;
+var renderer, scene, bgScene, camera, cameraControls;
+var bgMesh;
+
 var controls;
 var mixer;
 //Lights
@@ -187,9 +189,31 @@ function movement(direction, speed){
 	// }
 }
 function main() {
+	bgScene = new THREE.Scene();
+	const loader = new THREE.TextureLoader();
+	const texture = loader.load(
+		'assets/tears_of_steel_bridge_2k.jpg',
+	);
+	texture.magFilter = THREE.LinearFilter;
+	texture.minFilter = THREE.LinearFilter;
+	
+	const shader = THREE.ShaderLib.equirect;
+		const material = new THREE.ShaderMaterial({
+		fragmentShader: shader.fragmentShader,
+		vertexShader: shader.vertexShader,
+		uniforms: shader.uniforms,
+		depthWrite: false,
+		side: THREE.BackSide,
+	});
+		material.uniforms.tEquirect.value = texture;
+	const planeScene = new THREE.BoxBufferGeometry(2, 2, 2);
+	bgMesh = new THREE.Mesh(planeScene, material);
+	// bgScene.add(bgMesh);
+	
 	
 	//Renderer
 	renderer.setClearColor(0x222222);
+	renderer.autoClearColor = false;
     renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputEncoding = THREE.sRGBEncoding;
@@ -211,12 +235,12 @@ function main() {
 
 	addLights();
 	loadDraco('model/draco/alocasia_s.drc');
-	loadGLTF('model/Duck.gltf',[1, -0.05, 0],[0.5, 0.5, 0.5]);
-	loadGLTF('model/Flamingo.glb',[-2, 2, 1],[0.01, 0.01, 0.01]);
-	loadFBX('model/dancing.fbx',[2, 0, -1],[0.01, 0.01, 0.01]);
+	loadGLTF('model/gltf/Duck.gltf',[1, -0.05, 0],[0.5, 0.5, 0.5]);
+	loadGLTF('model/glb/Flamingo.glb',[-2, 2, 1],[0.01, 0.01, 0.01]);
+	loadFBX('model/fbx/avatar1.fbx',[2, 0, -1],[0.01, 0.01, 0.01]);
 	
     var plane = new THREE.Mesh(
-        new THREE.PlaneBufferGeometry( 8, 8 ),
+        new THREE.PlaneBufferGeometry( 80, 80 ),
         new THREE.MeshPhongMaterial( { color: 0x999999, specular: 0x101010 } )
     );
     plane.rotation.x = - Math.PI / 2;
@@ -414,7 +438,9 @@ function animate()
  
 		// renderer.render( scene, camera );
  
-    }
+	}
+	bgMesh.position.copy(camera.position);
+    renderer.render(bgScene, camera);
 	renderer.render(scene, camera);
 }
 
