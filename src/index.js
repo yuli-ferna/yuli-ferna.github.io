@@ -235,9 +235,9 @@ function main() {
 
 	addLights();
 	loadDraco('model/draco/alocasia_s.drc');
-	loadGLTF('model/gltf/Duck.gltf',[1, -0.05, 0],[0.5, 0.5, 0.5]);
-	loadGLTF('model/glb/Flamingo.glb',[-2, 2, 1],[0.01, 0.01, 0.01]);
-	loadFBX('model/fbx/avatar1.fbx',[2, 0, -1],[0.01, 0.01, 0.01]);
+	loadGLTF('model/gltf/Duck.gltf', [1, -0.05, 0], [0.5, 0.5, 0.5]);
+	loadGLTF('model/glb/Flamingo.glb', [-2, 2, 1], [0.01, 0.01, 0.01]);
+	loadFBX('model/fbx/avatar1.fbx', [2, 0, -1], [0.01, 0.01, 0.01]);
 	
     var plane = new THREE.Mesh(
         new THREE.PlaneBufferGeometry( 80, 80 ),
@@ -285,13 +285,14 @@ function loadFBX(path,pos,scale) {
 
 	} );
 }
+
 function loadGLTF(path, pos,scale) {
 	// Instantiate a loader
 	var loader = new GLTFLoader();
 
 	// Optional: Provide a DRACOLoader instance to decode compressed mesh data
 	var dracoLoader = new DRACOLoader();
-	dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
+	// dracoLoader.setDecoderPath( '/examples/js/libs/draco/' );
 	dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 	loader.setDRACOLoader( dracoLoader );
 
@@ -330,6 +331,7 @@ function loadGLTF(path, pos,scale) {
 
 		});	
 }
+
 function loadDraco(path) {
 	var dracoLoader = new DRACOLoader();
 	// It is recommended to always pull your Draco JavaScript and WASM decoders
