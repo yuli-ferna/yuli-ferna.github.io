@@ -8,10 +8,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 </head>
+<style>
+    body{
+        background: rgb(238,174,202);
+background: radial-gradient(circle, rgba(238,174,202,0.6082808123249299) 0%, rgba(148,187,233,0.6278886554621849) 100%);
+    }
+
+    .shadow{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+</style>
+
 <body>
     <div class="h-50 row align-items-center">
-        <div class="container align-middle">
+        <div class="container shadow align-middle bg-light p-5">
             <h1 class="text-center mb-5" >Demos</h1>
+            <a role="button" href="./lights/index.html" class="btn btn-warning btn-lg btn-block">Lights</a>
             <a role="button" href="./load-model/index.html" class="btn btn-info btn-lg btn-block">Load Models</a>
         </div>
     </div>
