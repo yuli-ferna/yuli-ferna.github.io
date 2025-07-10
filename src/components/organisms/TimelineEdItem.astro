@@ -1,0 +1,60 @@
+---
+import Description from "../atoms/Description";
+import TagContainer from "../molecules/TagContainer.astro";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import Link from "../atoms/icons/Link";
+import DateTimeline from "../atoms/DateTimeline.astro";
+const {
+  title,
+  description,
+  image,
+  tags,
+  companyName,
+  certificate,
+  dateStart,
+  dateEnd,
+} = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+<div>
+  <div>
+    <DateTimeline dateStart={dateStart} dateEnd={dateEnd} />
+    <div
+      class="time-item"
+    >
+      <div
+        class="flex flex-col justify-start items-start flex-grow-0 flex-shrink-0 relative gap-2.5"
+      >
+      </div>
+      <div class="flex flex-col justify-start items-center gap-3 px-4">
+        <div class="flex flex-row justify-between items-center gap-8 relative">
+          <div class="max-w-20 h-max-20">
+            <img
+            src={`/${image}`}
+            class="flex-grow-0 flex-shrink-0 w-fit"
+            alt={title}
+          />
+          </div>
+            <p class="text-2xl font-bold text-left text-pink-200">
+              {title}
+            </p>
+        </div>
+        <div>
+          <p class="text-base text-left text-pink-300">
+            {companyName}
+          </p>
+        </div>
+        <Description text={description} client:load />
+      </div>
+      <TagContainer items={tags} />
+      <div class="flex justify-end items-end gap-2 px-4 pb-4 flex-wrap w-full">
+        {certificate && <a class="button w-full" href={certificate} target="_blank" rel="noopener noreferrer" aria-label="Go to certificate">
+          <Link client:load />
+          {t("education")["seeCertificate"]}
+        </a>}
+      </div>
+    </div>
+  </div>
+</div>

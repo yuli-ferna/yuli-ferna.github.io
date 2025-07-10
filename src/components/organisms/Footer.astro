@@ -1,0 +1,49 @@
+---
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import ContactLinks from "../molecules/ContactLinks.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<footer
+  class="pt-10 pb-30 px-4 text-center border-secondary bg-container-item/20 text-secondary"
+>
+  <div class="flex flex-col md:flex-row justify-around gap-10">
+    <div class="flex flex-col justify-between gap-8">
+      <p class="title text-[28px]">{t("contact")["myLinks"]}</p>
+      <ContactLinks />
+    </div>
+    <div class="max-w-80 flex flex-col gap-2 justify-center self-center md:justify-start">
+      <p class="flex gap-2">
+        Built with <a
+          class="flex gap-2"
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><img src="/astro.svg" alt="Astro Icon" /> Astro</a
+        >
+      </p>
+      <p class="flex gap-2">
+        Styled with <a
+          class="flex gap-2"
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><img src="/tailwind.svg" alt="TailwindCSS Icon" /> TailwindCSS</a
+        >
+      </p>
+      <p class="text-left">
+        Icons from <a
+          href="http://streamlinehq.com"
+          target="_blank"
+          rel="noopener noreferrer">Streamlinehq.com</a
+        > licensed under CC BY 4.0
+      </p>
+    </div>
+
+  </div>
+  <p class="flex gap-2 justify-center border-t-1 border-pink-400 pt-3 mt-10">
+    &copy; 2025 Yuliana Fernandez. All rights reserved.
+  </p>
+</footer>
