@@ -1,0 +1,53 @@
+---
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import Certificate from "../atoms/icons/Certificate";
+import Education from "../atoms/icons/Education";
+import Work from "../atoms/icons/Work";
+import TimelineWorkItem from "../organisms/TimelineWorkItem.astro";
+import { motion } from "framer-motion";
+import TimelineEdItem from "./TimelineEdItem.astro";
+const { items, type = "work" } = Astro.props;
+const itemsSize = items.length;
+---
+
+<div class="w-screen h-fit relative max-w-200">
+  {
+    items.map((item, index) => {
+      const isEven = (index + 1) % 2 === 0;
+      let icon = type === "work" ? <Work /> : item.type === "education" ? <Education /> : <Certificate />;
+      return (
+        <div
+          class={`flex flex-row justify-around sm:justify-center md:justify-end gap-0 sm:gap-10 md:gap-15 pb-10 ${isEven ? " md:flex-row-reverse md:gap-16" : ""}`}
+        >
+          <div class="relative">
+            <div class="time-point">
+              {icon}
+            </div>
+            {itemsSize > index + 1 && <motion.div
+              client:visible
+              layout
+              viewport={{once: true}}
+              initial={{ height: 0 }}
+              whileInView={{ height: [0, "100%"] }}
+              transition={{ duration: 1, ease: "easeInOut" }}
+              exit={{ height: 0 }}
+              className="w-1 bg-primary absolute top-10 left-5 z-0"
+            />}
+          </div>
+          <motion.div
+            client:visible
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{
+              amount: 0.7,
+            }}
+            initial={{ opacity: 0, y: 50 }}
+            transition={{ duration: 1, type: "spring", bounce: 0.2 }}
+          >
+            {type === "work" && <TimelineWorkItem {...item} />}
+            {type === "education" && <TimelineEdItem {...item} />}
+          </motion.div>
+        </div>
+      );
+    })
+  }
+</div>
