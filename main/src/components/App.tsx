@@ -1,65 +1,234 @@
-import Avatar from 'components/Avatar'
-import logo from 'assets/logo.svg'
+import { useTranslation } from 'react-i18next';
 import '../styles/global.css'
-const randoms = [
-  [1, 2],
-  [3, 4, 5],
-  [6, 7]
-]
+import { LanguageSelector } from './language-selector';
+
+const portfolio = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="Coding-Apps-Websites-Dinosaur-Error--Streamline-Pixel" height="54" width="54">
+  <desc>
+    Coding Apps Websites Dinosaur Error Streamline Icon: https://streamlinehq.com
+  </desc>
+  <title>coding-apps-websites-dinosaur-error</title>
+  <g>
+    <path d="M22.86 18.85875H24v1.1400000000000001h-1.1400000000000001Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="m24 10.85625 0 -2.2874999999999996 -1.1400000000000001 0 0 1.1475 -1.1475 0 0 -2.2874999999999996 -1.1400000000000001 0 0 4.574999999999999 -1.1475 0 0 -1.1475 -1.1400000000000001 0 0 2.2874999999999996 2.2874999999999996 0 0 3.4275 -5.715 0 0 1.1475 9.1425 0 0 -1.1475 -2.2874999999999996 0 0 -5.715 2.2874999999999996 0z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M21.7125 0.57375H24v1.1400000000000001h-2.2874999999999996Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M19.424999999999997 18.85875h1.1475v1.1400000000000001H19.424999999999997Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M18.285 2.86125h2.2874999999999996v1.1400000000000001h-2.2874999999999996Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M14.857499999999998 18.85875h1.1400000000000001v1.1400000000000001h-1.1400000000000001Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="m14.857499999999998 7.428749999999999 -3.4275 0 0 1.1400000000000001 3.4275 0 0 1.1475 1.1400000000000001 0 0 -5.715 -1.1400000000000001 0 0 3.4275z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M10.2825 12.00375h-2.2800000000000002v1.1400000000000001h2.2800000000000002v1.1400000000000001h-2.2800000000000002v-1.1400000000000001H6.855v4.574999999999999h3.4275v1.1400000000000001H6.855v1.1400000000000001H3.4275V21.15H4.574999999999999v2.2800000000000002h2.2800000000000002v-1.1400000000000001H5.715V21.15h3.4275v-1.1475h1.1400000000000001v1.1475h2.2874999999999996v-1.1475h-1.1400000000000001v-4.5675h1.1400000000000001v1.1400000000000001h1.1475v-2.2874999999999996h-2.2874999999999996v-3.4275h3.4275v-1.1400000000000001h-4.574999999999999Zm0 4.5675h-2.2800000000000002v-1.1400000000000001h2.2800000000000002Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M8.0025 0.57375h2.2800000000000002v1.1400000000000001h-2.2800000000000002Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M6.855 5.14125h1.1475v2.2874999999999996H6.855Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M5.715 2.86125h9.1425v1.1400000000000001H5.715Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M5.715 17.71875h1.1400000000000001v1.1400000000000001H5.715Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M4.574999999999999 4.00125h1.1400000000000001v8.0025H4.574999999999999Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M3.4275 12.00375H4.574999999999999v3.4275H3.4275Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M2.2874999999999996 18.85875h1.1400000000000001v1.1400000000000001H2.2874999999999996Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M2.2874999999999996 15.431249999999999h1.1400000000000001v1.1400000000000001H2.2874999999999996Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M1.1400000000000001 17.71875h1.1475v1.1400000000000001H1.1400000000000001Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="M0 4.00125h2.2874999999999996v1.1400000000000001H0Z" fill="#21242A" stroke-width="0.75"></path>
+    <path d="m1.1400000000000001 15.431249999999999 1.1475 0 0 -1.1475 -1.1475 0 0 -1.1400000000000001 -1.1400000000000001 0 0 4.574999999999999 1.1400000000000001 0 0 -2.2874999999999996z" fill="#21242A" stroke-width="0.75"></path>
+  </g>
+</svg>;
+
+const github = <svg
+  width="54"
+  height="54"
+  viewBox="0 0 54 54"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  className="flex-grow-0 flex-shrink-0 w-[54px] h-[54px] relative"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <g clip-path="url(#clip0_41_53)">
+    <path d="M51.4181 5.14685H54V48.8531H51.4181V5.14685Z" fill="#21242A"></path>
+    <path d="M48.8531 48.8531H51.4181V51.435H48.8531V48.8531Z" fill="#21242A"></path>
+    <path d="M48.8531 2.56494H51.4181V5.14682H48.8531V2.56494Z" fill="#21242A"></path>
+    <path d="M46.2712 7.71191H48.8531V46.2882H46.2712V7.71191Z" fill="#21242A"></path>
+    <path d="M5.13 51.4351H48.8531V54.0001H5.13V51.4351Z" fill="#21242A"></path>
+    <path d="M7.71188 46.2881H46.2713V48.8531H7.71188V46.2881Z" fill="#21242A"></path>
+    <path d="M7.71188 5.14685H46.2713V7.71185H7.71188V5.14685Z" fill="#21242A"></path>
+    <path d="M5.13 0H48.8531V2.565H5.13V0Z" fill="#21242A"></path>
+    <path d="M5.13 7.71191H7.71188V46.2882H5.13V7.71191Z" fill="#21242A"></path>
+    <path d="M2.565 48.8531H5.13V51.435H2.565V48.8531Z" fill="#21242A"></path>
+    <path d="M2.565 2.56494H5.13V5.14682H2.565V2.56494Z" fill="#21242A"></path>
+    <path d="M0 5.14685H2.565V48.8531H0V5.14685Z" fill="#21242A"></path>
+    <path
+      d="M30.4576 40.3352C30.4576 40.1652 30.4576 39.7685 30.4671 39.2395C30.4765 38.1628 30.4765 36.5192 30.4765 35.1119C30.4765 33.6384 29.9854 32.7033 29.4092 32.2121C32.904 31.8249 36.5877 31.3431 36.5877 25.3075C36.5877 23.5884 35.9738 22.7289 34.9726 21.6238C35.1331 21.2176 35.6715 19.5458 34.812 17.3733C33.4991 16.9672 30.4954 19.064 30.4954 19.064C29.2486 18.7146 27.8979 18.5351 26.5661 18.5351C25.2343 18.5351 23.8836 18.7146 22.6368 19.064C22.6368 19.064 19.6331 16.9672 18.3202 17.3733C17.4607 19.5363 17.9896 21.2082 18.1597 21.6238C17.1584 22.7289 16.6862 23.5884 16.6862 25.3075C16.6862 31.3148 20.2093 31.8249 23.7041 32.2121C23.2508 32.6183 22.8446 33.3172 22.7029 34.3185C21.8056 34.7246 19.5104 35.4236 18.1408 33.0055C17.2812 31.5132 15.7322 31.3904 15.7322 31.3904C14.202 31.3715 15.6283 32.3538 15.6283 32.3538C16.6484 32.8261 17.3662 34.6396 17.3662 34.6396C18.2824 37.4449 22.6651 36.5004 22.6651 36.5004C22.6651 37.3504 22.6746 38.55 22.6746 39.3907C22.6746 39.844 22.684 40.203 22.684 40.3352C22.684 40.7414 22.4007 41.2325 21.5978 41.0908C15.3638 39.0034 11 33.0717 11 26.1387C11 17.4678 17.6307 10.8843 26.3016 10.8843C34.9726 10.8843 42 17.4678 42 26.1387C42.0094 33.0717 37.7779 39.0128 31.5439 41.0908C30.7504 41.2325 30.4576 40.7414 30.4576 40.3352ZM21.9095 35.1591C21.8906 35.0174 22.0134 34.8946 22.1929 34.8568C22.3723 34.838 22.5423 34.9135 22.5612 35.0363C22.5896 35.1591 22.4668 35.2819 22.2779 35.3197C22.0984 35.3575 21.9284 35.2819 21.9095 35.1591ZM21.05 35.4614C20.8422 35.4802 20.7005 35.3763 20.7005 35.2347C20.7005 35.1119 20.8422 35.008 21.0311 35.008C21.2105 34.9891 21.3806 35.093 21.3806 35.2347C21.3806 35.3575 21.2389 35.4614 21.05 35.4614ZM19.6993 35.2536C19.5198 35.2158 19.397 35.0741 19.4348 34.9513C19.4726 34.8285 19.6615 34.7718 19.8221 34.8096C20.011 34.8663 20.1338 35.008 20.0865 35.1308C20.0487 35.2536 19.8598 35.3102 19.6993 35.2536ZM18.5186 34.564C18.3769 34.4412 18.3391 34.2618 18.4336 34.1768C18.5186 34.0729 18.698 34.0918 18.8397 34.2334C18.9625 34.3562 19.0097 34.5451 18.9247 34.6207C18.8397 34.7246 18.6603 34.7057 18.5186 34.564ZM17.7157 33.6195C17.6118 33.4778 17.6118 33.3172 17.7157 33.2511C17.8196 33.1661 17.9802 33.2322 18.0652 33.3739C18.1691 33.5156 18.1691 33.6856 18.0652 33.7612C17.9802 33.8178 17.8196 33.7612 17.7157 33.6195ZM17.1207 32.7883C17.0168 32.6655 16.9979 32.5238 17.0829 32.4577C17.1679 32.3727 17.3096 32.4199 17.4135 32.5144C17.5174 32.6372 17.5363 32.7788 17.4512 32.845C17.3662 32.93 17.2246 32.8827 17.1207 32.7883ZM16.5539 32.1838C16.4311 32.1271 16.3745 32.0232 16.4122 31.9382C16.45 31.8815 16.5539 31.8532 16.6767 31.9004C16.7995 31.9665 16.8562 32.0704 16.8184 32.146C16.7806 32.231 16.6578 32.2499 16.5539 32.1838Z"
+      fill="#21242A"
+    ></path>
+  </g>
+  <defs>
+    <clipPath id="clip0_41_53"><rect width="54" height="54" fill="white"></rect></clipPath>
+  </defs>
+</svg>;
+
+const linkedin = <svg
+  width="54"
+  height="54"
+  viewBox="0 0 54 54"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  className="flex-grow-0 flex-shrink-0 w-[54px] h-[54px] relative"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <g clip-path="url(#clip0_41_36)">
+    <path d="M51.4182 5.14685H54V48.8531H51.4182V5.14685Z" fill="#21242A"></path>
+    <path d="M48.8531 48.8531H51.4182V51.435H48.8531V48.8531Z" fill="#21242A"></path>
+    <path d="M48.8531 2.56494H51.4182V5.14682H48.8531V2.56494Z" fill="#21242A"></path>
+    <path d="M46.2712 7.71191H48.8531V46.2882H46.2712V7.71191Z" fill="#21242A"></path>
+    <path d="M5.13 51.4351H48.8531V54.0001H5.13V51.4351Z" fill="#21242A"></path>
+    <path d="M7.71185 46.2881H46.2712V48.8531H7.71185V46.2881Z" fill="#21242A"></path>
+    <path
+      d="M38.5594 25.7175H35.9944V23.1356H30.8475V25.7175H28.2825V23.1356H23.1356V38.5762H28.2825V30.8644H30.8475V28.2825H33.4294V30.8644H35.9944V38.5762H41.1412V28.2825H38.5594V25.7175Z"
+      fill="#21242A"
+    ></path>
+    <path d="M12.8419 23.1356H17.9887V38.5762H12.8419V23.1356Z" fill="#21242A"></path>
+    <path d="M12.8419 15.4237H17.9887V20.5706H12.8419V15.4237Z" fill="#21242A"></path>
+    <path d="M7.71185 5.14685H46.2712V7.71185H7.71185V5.14685Z" fill="#21242A"></path>
+    <path d="M5.13 0H48.8531V2.565H5.13V0Z" fill="#21242A"></path>
+    <path d="M5.13 7.71191H7.71188V46.2882H5.13V7.71191Z" fill="#21242A"></path>
+    <path d="M2.565 48.8531H5.13V51.435H2.565V48.8531Z" fill="#21242A"></path>
+    <path d="M2.565 2.56494H5.13V5.14682H2.565V2.56494Z" fill="#21242A"></path>
+    <path d="M0 5.14685H2.565V48.8531H0V5.14685Z" fill="#21242A"></path>
+  </g>
+  <defs>
+    <clipPath id="clip0_41_36"><rect width="54" height="54" fill="white"></rect></clipPath>
+  </defs>
+</svg>;
+
+const gmail = <svg
+  width="48"
+  height="48"
+  viewBox="0 0 48 48"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  className="flex-grow-0 flex-shrink-0 w-12 h-12 relative"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <g clip-path="url(#clip0_41_68)">
+    <path
+      d="M45.72 18.285V16.005H43.425V13.71H41.145V9.15002H38.865V27.435H41.145V25.14H43.425V22.86H45.72V43.425H48V18.285H45.72Z"
+      fill="#21242A"
+    ></path>
+    <path d="M43.425 43.425H45.72V45.7201H43.425V43.425Z" fill="#21242A"></path>
+    <path d="M4.57501 45.72H43.425V48H4.57501V45.72Z" fill="#21242A"></path>
+    <path d="M36.57 27.4351H38.865V29.7151H36.57V27.4351Z" fill="#21242A"></path>
+    <path d="M34.29 38.865H36.57V41.145H34.29V38.865Z" fill="#21242A"></path>
+    <path d="M34.29 29.715H36.57V31.995H34.29V29.715Z" fill="#21242A"></path>
+    <path d="M31.995 36.5699H34.29V38.8649H31.995V36.5699Z" fill="#21242A"></path>
+    <path d="M31.995 31.995H34.29V34.29H31.995V31.995Z" fill="#21242A"></path>
+    <path d="M31.995 16.005H34.29V22.86H31.995V16.005Z" fill="#21242A"></path>
+    <path d="M29.715 13.71H31.995V16.005H29.715V13.71Z" fill="#21242A"></path>
+    <path d="M16.005 34.29H31.995V36.57H16.005V34.29Z" fill="#21242A"></path>
+    <path d="M27.435 22.86H31.995V25.14H27.435V22.86Z" fill="#21242A"></path>
+    <path d="M27.435 16.005H20.58V18.285H25.14V22.86H27.435V16.005Z" fill="#21242A"></path>
+    <path d="M20.58 22.86H25.14V25.14H20.58V22.86Z" fill="#21242A"></path>
+    <path d="M18.285 11.4301H29.715V13.7101H18.285V11.4301Z" fill="#21242A"></path>
+    <path d="M18.285 27.4351H29.715V29.7151H18.285V27.4351Z" fill="#21242A"></path>
+    <path d="M18.285 18.285H20.58V22.86H18.285V18.285Z" fill="#21242A"></path>
+    <path d="M16.005 25.14H18.285V27.435H16.005V25.14Z" fill="#21242A"></path>
+    <path d="M16.005 13.71H18.285V16.005H16.005V13.71Z" fill="#21242A"></path>
+    <path d="M13.71 36.5699H16.005V38.8649H13.71V36.5699Z" fill="#21242A"></path>
+    <path d="M13.71 31.995H16.005V34.29H13.71V31.995Z" fill="#21242A"></path>
+    <path d="M13.71 16.005H16.005V25.14H13.71V16.005Z" fill="#21242A"></path>
+    <path d="M11.43 38.865H13.71V41.145H11.43V38.865Z" fill="#21242A"></path>
+    <path d="M11.43 29.715H13.71V31.995H11.43V29.715Z" fill="#21242A"></path>
+    <path
+      d="M38.865 9.15V6.855H34.29V4.575H31.995V2.28H29.715V0H18.285V2.28H16.005V4.575H13.71V6.855H9.15002V9.15H38.865Z"
+      fill="#21242A"
+    ></path>
+    <path d="M9.15002 27.4351H11.43V29.7151H9.15002V27.4351Z" fill="#21242A"></path>
+    <path d="M2.28003 43.425H4.57503V45.7201H2.28003V43.425Z" fill="#21242A"></path>
+    <path
+      d="M2.28 22.86H4.575V25.14H6.855V27.435H9.15V9.15002H6.855V13.71H4.575V16.005H2.28V18.285H0V43.425H2.28V22.86Z"
+      fill="#21242A"
+    ></path>
+  </g>
+  <defs>
+    <clipPath id="clip0_41_68"><rect width="48" height="48" fill="white"></rect></clipPath>
+  </defs>
+</svg>;
 
 function App() {
+  const { t } = useTranslation();
+  console.log(t("underConstruction.title"))
+
   return (
-    <div className="relative overflow-hidden">
-      <div className="h-screen sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">
-        <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
-          <div className="sm:max-w-lg">
-            <div className="my-4">
-              <Avatar size="large" src={logo} />
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Welcome!
-            </h1>
-            <p className="mt-4 text-xl text-gray-500">
-              This is a boilerplate build with Vite, React 18, TypeScript,
-              Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier.
-            </p>
-          </div>
-          <div className="my-10">
-            <a
-              href="vscode://"
-              className="inline-block rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-center font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2"
-            >
-              Start building for free
-            </a>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none mt-10 md:mt-0 lg:absolute lg:inset-y-0 lg:mx-auto lg:w-full lg:max-w-7xl"
-            >
-              <div className="absolute sm:left-1/2 sm:top-0 sm:translate-x-8 lg:left-1/2 lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-8">
-                <div className="flex items-center space-x-6 lg:space-x-8">
-                  {randoms.map((random, number) => (
-                    <div
-                      key={`random-${random[number]}`}
-                      className="grid shrink-0 grid-cols-1 gap-y-6 lg:gap-y-8"
-                    >
-                      {random.map((number) => (
-                        <div
-                          key={`random-${number}`}
-                          className="h-64 w-44 overflow-hidden rounded-lg sm:opacity-0 lg:opacity-100"
-                        >
-                          <img
-                            src={`https://picsum.photos/600?random=${number}`}
-                            alt=""
-                            className="size-full bg-indigo-100 object-cover object-center"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="background-home h-screen relative">
+      <LanguageSelector />
+      <div className="flex flex-col justify-start items-center relative gap-10 backdrop-blur-xs w-fit p-5 m-auto">
+        <p className="flex-grow-0 flex-shrink-0 w-[286px] h-[88px] text-[38px] text-center text-[#21242a]">
+          <span
+            className="flex-grow-0 flex-shrink-0 w-[286px] text-[38px] text-center text-[#21242a]"
+          >{t("underConstruction.project")}
+          </span>
+        </p>
+        <p className="flex-grow-0 flex-shrink-0 w-[286px] h-[137px] text-[59px] text-center text-[#21242a]">
+          {t("underConstruction.title")}
+        </p>
+        <svg
+          width="200"
+          height="200"
+          viewBox="0 0 200 200"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="flex-grow-0 flex-shrink-0 w-[200px] h-[200px] relative"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <g clip-path="url(#clip0_40_9)">
+            <path
+              d="M66.6874 114.25V161.875H95.2499V200H104.75V161.875H161.937V200H171.437V161.875H200V114.25H66.6874ZM104.75 142.875H95.2499V152.375H76.1874V142.875H85.7499V133.313H95.2499V123.813H114.312V133.313H104.75V142.875ZM142.875 142.875H133.312V152.375H114.312V142.875H123.812V133.313H133.312V123.813H152.375V133.313H142.875V142.875ZM190.5 133.313H180.937V142.875H171.437V152.375H152.375V142.875H161.937V133.313H171.437V123.813H190.5V133.313Z"
+              fill="#21242A"
+            ></path>
+            <path d="M133.312 76.1875H142.875V85.6875H133.312V76.1875Z" fill="#21242A"></path>
+            <path d="M133.312 57.1251H142.875V66.6876H133.312V57.1251Z" fill="#21242A"></path>
+            <path d="M123.813 66.6874H133.313V76.1874H123.813V66.6874Z" fill="#21242A"></path>
+            <path d="M114.313 76.1875H123.813V85.6875H114.313V76.1875Z" fill="#21242A"></path>
+            <path d="M114.313 57.1251H123.813V66.6876H114.313V57.1251Z" fill="#21242A"></path>
+            <path d="M104.75 95.2499H114.313V104.75H104.75V95.2499Z" fill="#21242A"></path>
+            <path d="M76.1875 85.6875H104.75V95.25H76.1875V85.6875Z" fill="#21242A"></path>
+            <path d="M66.6874 95.2499H76.1874V104.75H66.6874V95.2499Z" fill="#21242A"></path>
+            <path d="M57.1251 76.1875H66.6876V85.6875H57.1251V76.1875Z" fill="#21242A"></path>
+            <path d="M57.1251 57.1251H66.6876V66.6876H57.1251V57.1251Z" fill="#21242A"></path>
+            <path d="M57.1251 19.0625H66.6876V28.5625H57.1251V19.0625Z" fill="#21242A"></path>
+            <path
+              d="M19.0625 171.437V152.375H9.5V171.437H0V200H66.6875V171.437H57.125V152.375H47.625V171.437H19.0625ZM57.125 180.937V190.5H9.5V180.937H57.125Z"
+              fill="#21242A"
+            ></path>
+            <path d="M47.625 66.6874H57.125V76.1874H47.625V66.6874Z" fill="#21242A"></path>
+            <path d="M38.125 76.1875H47.625V85.6875H38.125V76.1875Z" fill="#21242A"></path>
+            <path d="M38.125 57.1251H47.625V66.6876H38.125V57.1251Z" fill="#21242A"></path>
+            <path d="M38.125 19.0625H47.625V28.5625H38.125V19.0625Z" fill="#21242A"></path>
+            <path
+              d="M28.5625 142.875V133.312H19.0625V152.375H47.625V133.312H38.125V142.875H28.5625Z"
+              fill="#21242A"
+            ></path>
+            <path d="M28.5626 123.813H38.1251V133.313H28.5626V123.813Z" fill="#21242A"></path>
+            <path d="M19.0625 19.0625H28.5625V28.5625H19.0625V19.0625Z" fill="#21242A"></path>
+            <path d="M9.5 0H171.437V9.49999H9.5V0Z" fill="#21242A"></path>
+            <path
+              d="M180.937 76.1875V9.5H171.437V38.0625H9.49999V9.5H0V142.875H9.49999V47.625H171.437V76.1875H180.937Z"
+              fill="#21242A"
+            ></path>
+          </g>
+          <defs>
+            <clipPath id="clip0_40_9"><rect width="200" height="200" fill="white"></rect></clipPath>
+          </defs>
+        </svg>
+        <div
+          className="flex flex-col justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1"
+        >
+          <p className="flex-grow-0 flex-shrink-0 text-[38px] text-center text-[#21242a]">{t("underConstruction.loading")}...</p>
+
+          <svg height={40} version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 2400 2400" ><g stroke-width="200" stroke-linecap="" stroke="currentColor" fill="none" id="spinner"><line x1="1200" y1="600" x2="1200" y2="100" /><line opacity="0.5" x1="1200" y1="2300" x2="1200" y2="1800" /><line opacity="0.917" x1="900" y1="680.4" x2="650" y2="247.4" /><line opacity="0.417" x1="1750" y1="2152.6" x2="1500" y2="1719.6" /><line opacity="0.833" x1="680.4" y1="900" x2="247.4" y2="650" /><line opacity="0.333" x1="2152.6" y1="1750" x2="1719.6" y2="1500" /><line opacity="0.75" x1="600" y1="1200" x2="100" y2="1200" /><line opacity="0.25" x1="2300" y1="1200" x2="1800" y2="1200" /><line opacity="0.667" x1="680.4" y1="1500" x2="247.4" y2="1750" /><line opacity="0.167" x1="2152.6" y1="650" x2="1719.6" y2="900" /><line opacity="0.583" x1="900" y1="1719.6" x2="650" y2="2152.6" /><line opacity="0.083" x1="1750" y1="247.4" x2="1500" y2="680.4" /><animateTransform attributeName="transform" attributeType="XML" type="rotate" keyTimes="0;0.08333;0.16667;0.25;0.33333;0.41667;0.5;0.58333;0.66667;0.75;0.83333;0.91667" values="0 1199 1199;30 1199 1199;60 1199 1199;90 1199 1199;120 1199 1199;150 1199 1199;180 1199 1199;210 1199 1199;240 1199 1199;270 1199 1199;300 1199 1199;330 1199 1199" dur="0.83333s" begin="0s" repeatCount="indefinite" calcMode="discrete" /></g></svg>
+        </div>
+        <div
+          className="flex justify-center items-center self-stretch flex-grow-0 flex-shrink-0 relative gap-8 md:gap-15"
+        >
+          <a href="https://yuli-ferna.vercel.app/" target='_blank' rel="noopener noreferrer">{portfolio}</a>
+          <a href="https://github.com/yuli-ferna" target='_blank' rel="noopener noreferrer">{github}</a>
+          <a href="https://www.linkedin.com/in/yuliana-fern%C3%A1ndez-950057126/" target='_blank' rel="noopener noreferrer">{linkedin}</a>
+          <a href="https://mail.google.com/mail/u/0/?fs=1&to=yuliferna123@gmail.com&su=Hey+Yuli!&tf=cm" target='_blank' rel="noopener noreferrer">{gmail}</a>
         </div>
       </div>
     </div>
