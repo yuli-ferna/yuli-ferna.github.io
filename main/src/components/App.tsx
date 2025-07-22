@@ -156,7 +156,7 @@ function App() {
   return (
     <div className="background-home h-screen relative">
       <LanguageSelector />
-      <div className="flex flex-col justify-start items-center relative gap-10 backdrop-blur-xs w-fit p-5 m-auto">
+      <div className="flex flex-col justify-start items-center relative gap-10 w-fit m-auto">
         <p className="flex-grow-0 flex-shrink-0 w-[286px] h-[88px] text-[38px] text-center text-[#21242a]">
           <span
             className="flex-grow-0 flex-shrink-0 w-[286px] text-[38px] text-center text-[#21242a]"

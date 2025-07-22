@@ -29,7 +29,7 @@ const LanguageSelector = () => {
   const { resolvedLanguage: currentLanguage } = i18n
 
   return (
-    <div className="w-fit px-5 py-2 md:p-5 backdrop-blur-xs md:absolute">
+    <div className="w-fit px-5 py-2 md:p-5 md:absolute">
       <Popover>
         <PopoverTrigger>
           <div className="flex items-center gap-1 fill-black text-black">
