@@ -6,7 +6,7 @@ main {
   @apply transition-colors delay-200 ease-in-out;
 }
 
-:root {
+/* :root {
   --color-falcon-50: #ffd8e4;
   --color-falcon-100: #f4eff2;
   --color-falcon-200: #ebdfe5;
@@ -41,7 +41,7 @@ main {
   --color-item: #a55f77;
   --color-primary-hover: #d55e86;
   --color-secondary: #ffd8e4;
-}
+} */
 
 [data-theme="dark"] {
   --color-text-primary: #ffd8e4;
