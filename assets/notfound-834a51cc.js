@@ -1,1 +1,0 @@
-const t="Hoppla!",e="Entschuldigung, es ist ein unerwarteter Fehler aufgetreten.",o="Zurück zur Startseite",n={oops:t,title:e,backtohomepage:o};export{o as backtohomepage,n as default,t as oops,e as title};
