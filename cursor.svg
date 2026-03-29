@@ -1,35 +1,35 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="24" height="24" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_199_1626)">
-<path d="M5.12903 1.28428L17.6812 13.6802L5.33333 18.9244L5.12903 1.28428Z" fill="#EAEAEA"/>
-<path d="M5.42344 15.4343L10.5064 16.2971L6.30889 20.5134L5.42344 15.4343Z" fill="#EAEAEA"/>
-<path d="M5.42344 15.4343L10.5064 16.2971L6.30889 20.5134L5.42344 15.4343Z" fill="#EAEAEA"/>
-<rect x="11.6572" y="17.1428" width="3.08571" height="2.28" fill="#EAEAEA"/>
-<rect x="13.0286" y="19.2" width="2.4" height="2.50286" fill="#EAEAEA"/>
-<rect x="10.6285" y="15.4286" width="3.08571" height="1.71429" fill="#EAEAEA"/>
-<rect x="14.7429" y="13.7143" width="3.42857" height="1.37143" fill="#EAEAEA"/>
-<path d="M13.14 14.8537V17.1412H14.2875V16.0012H18.855V13.7137H17.715V14.8537H13.14Z" fill="black"/>
-<path d="M16.5675 12.5662H17.715V13.7137H16.5675V12.5662Z" fill="black"/>
-<path d="M15.4275 19.4287H16.5675V21.7087H15.4275V19.4287Z" fill="black"/>
-<path d="M15.4275 11.4262H16.5675V12.5662H15.4275V11.4262Z" fill="black"/>
-<path d="M14.2875 17.1412H15.4275V19.4287H14.2875V17.1412Z" fill="black"/>
-<path d="M14.2875 10.2863H15.4275V11.4263H14.2875V10.2863Z" fill="black"/>
-<path d="M13.14 21.7087H15.4275V22.8562H13.14V21.7087Z" fill="black"/>
-<path d="M13.14 9.13873H14.2875V10.2862H13.14V9.13873Z" fill="black"/>
-<path d="M12 19.4287H13.14V21.7087H12V19.4287Z" fill="black"/>
-<path d="M12 7.99872H13.14V9.13872H12V7.99872Z" fill="black"/>
-<path d="M10.8525 17.1412H12V19.4287H10.8525V17.1412Z" fill="black"/>
-<path d="M10.8525 6.85126H12V7.99876H10.8525V6.85126Z" fill="black"/>
-<path d="M9.71252 16.0012H10.8525V17.1412H9.71252V16.0012Z" fill="black"/>
-<path d="M9.71252 5.71124H10.8525V6.85124H9.71252V5.71124Z" fill="black"/>
-<path d="M8.57251 17.1412H9.71251V18.2812H8.57251V17.1412Z" fill="black"/>
-<path d="M8.57251 4.57123H9.71251V5.71123H8.57251V4.57123Z" fill="black"/>
-<path d="M7.42505 18.2812H8.57255V19.4287H7.42505V18.2812Z" fill="black"/>
-<path d="M7.42505 3.42377H8.57255V4.57127H7.42505V3.42377Z" fill="black"/>
-<path d="M5.14502 1.14374V20.5687H7.42502V19.4287H6.28502V3.42374H7.42502V2.28374H6.28502V1.14374H5.14502Z" fill="black"/>
+<path d="M14.9597 3.74589L51.5701 39.9006L15.5556 55.1962L14.9597 3.74589Z" fill="white"/>
+<path d="M15.8184 45.0167L30.6437 47.5333L18.4009 59.8307L15.8184 45.0167Z" fill="white"/>
+<path d="M15.8184 45.0167L30.6437 47.5333L18.4009 59.8307L15.8184 45.0167Z" fill="white"/>
+<rect x="34" y="50" width="9" height="6.65" fill="white"/>
+<rect x="38" y="56" width="7" height="7.3" fill="white"/>
+<rect x="31" y="45" width="9" height="5" fill="white"/>
+<rect x="43" y="40" width="10" height="4" fill="white"/>
+<path d="M38.325 43.3234V49.9953H41.6718V46.6703H54.9937V39.9984H51.6687V43.3234H38.325Z" fill="black"/>
+<path d="M48.3218 36.6516H51.6687V39.9984H48.3218V36.6516Z" fill="black"/>
+<path d="M44.9968 56.6672H48.3218V63.3172H44.9968V56.6672Z" fill="black"/>
+<path d="M44.9968 33.3265H48.3218V36.6515H44.9968V33.3265Z" fill="black"/>
+<path d="M41.6719 49.9953H44.9969V56.6672H41.6719V49.9953Z" fill="black"/>
+<path d="M41.6719 30.0016H44.9969V33.3266H41.6719V30.0016Z" fill="black"/>
+<path d="M38.325 63.3172H44.9968V66.6641H38.325V63.3172Z" fill="black"/>
+<path d="M38.325 26.6547H41.6718V30.0015H38.325V26.6547Z" fill="black"/>
+<path d="M35 56.6672H38.325V63.3172H35V56.6672Z" fill="black"/>
+<path d="M35 23.3297H38.325V26.6547H35V23.3297Z" fill="black"/>
+<path d="M31.6531 49.9953H35V56.6672H31.6531V49.9953Z" fill="black"/>
+<path d="M31.6531 19.9828H35V23.3297H31.6531V19.9828Z" fill="black"/>
+<path d="M28.3281 46.6703H31.6531V49.9953H28.3281V46.6703Z" fill="black"/>
+<path d="M28.3281 16.6578H31.6531V19.9828H28.3281V16.6578Z" fill="black"/>
+<path d="M25.0031 49.9953H28.3281V53.3203H25.0031V49.9953Z" fill="black"/>
+<path d="M25.0031 13.3328H28.3281V16.6578H25.0031V13.3328Z" fill="black"/>
+<path d="M21.6562 53.3203H25.0031V56.6672H21.6562V53.3203Z" fill="black"/>
+<path d="M21.6562 9.98596H25.0031V13.3328H21.6562V9.98596Z" fill="black"/>
+<path d="M15.0062 3.33594V59.9922H21.6562V56.6672H18.3312V9.98594H21.6562V6.66094H18.3312V3.33594H15.0062Z" fill="black"/>
 </g>
 <defs>
 <clipPath id="clip0_199_1626">
-<rect width="24" height="24" fill="white"/>
+<rect width="70" height="70" fill="white"/>
 </clipPath>
 </defs>
 </svg>
