@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora 3D · Bambu Lab A1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #12121a;
+    --border: #1e1e2e;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --text: #e8e8f0;
+    --muted: #6b6b88;
+    --green: #39ff87;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: rgba(0,229,255,0.05);
+    box-shadow: 0 0 20px rgba(0,229,255,0.15);
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  h1 span {
+    color: var(--accent);
+    display: block;
+    font-size: 0.9rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .badge {
+    background: rgba(255,107,53,0.12);
+    border: 1px solid rgba(255,107,53,0.3);
+    color: var(--accent2);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* Formula section */
+  .formula-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .formula-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .formula-title {
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .formula {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent);
+    line-height: 2.2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .formula .var {
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 6px;
+    padding: 2px 10px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .formula .op {
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  .formula .result {
+    background: rgba(57,255,135,0.08);
+    border: 1px solid rgba(57,255,135,0.25);
+    color: var(--green);
+    border-radius: 6px;
+    padding: 2px 10px;
+  }
+
+  /* Grid layout */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+  .field {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .field:hover, .field:focus-within {
+    border-color: rgba(0,229,255,0.3);
+  }
+
+  .field label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .field label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .field label .dot.orange { background: var(--accent2); }
+  .field label .dot.green { background: var(--green); }
+  .field label .dot.purple { background: #c084fc; }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  input[type="number"], select {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    padding: 8px 12px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,229,255,0.08);
+  }
+
+  select option { background: #1a1a28; }
+
+  .unit {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 28px;
+  }
+
+  /* Margen section */
+  .margin-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+
+  .margin-label {
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .margin-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #c084fc;
+    display: inline-block;
+  }
+
+  .slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(0,229,255,0.5);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+
+  .slider-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent);
+    min-width: 46px;
+    text-align: right;
+  }
+
+  /* Result */
+  .result-card {
+    background: linear-gradient(135deg, rgba(0,229,255,0.04), rgba(57,255,135,0.04));
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+  }
+
+  .result-label {
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .result-price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--green);
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(57,255,135,0.3);
+    transition: all 0.3s;
+  }
+
+  .result-price.updating {
+    transform: scale(1.03);
+    text-shadow: 0 0 60px rgba(57,255,135,0.5);
+  }
+
+  .breakdown {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .breakdown-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .breakdown-item .bi-label {
+    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .breakdown-item .bi-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .bi-material { color: var(--accent); }
+  .bi-energy { color: var(--accent2); }
+  .bi-time { color: #c084fc; }
+  .bi-fail { color: #facc15; }
+  .bi-margin { color: var(--green); }
+
+  /* Info boxes */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+
+  .info-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  .info-box strong {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .info-box code {
+    background: rgba(0,229,255,0.08);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo-area">
+      <div class="logo-icon">🖨️</div>
+      <h1>
+        Precio 3D
+        <span>Bambu Lab A1 · Calculadora</span>
+      </h1>
+    </div>
+    <div class="badge">v1.0 · MX / USD</div>
+  </header>
+
+  <!-- Fórmula -->
+  <div class="formula-box">
+    <div class="formula-title">// Fórmula de costo</div>
+    <div class="formula">
+      <span class="result">Precio final</span>
+      <span class="op">=</span>
+      <span class="op">(</span>
+      <span class="var">Filamento</span>
+      <span class="op">+</span>
+      <span class="var">Energía</span>
+      <span class="op">+</span>
+      <span class="var">Tiempo</span>
+      <span class="op">+</span>
+      <span class="var">Fallas</span>
+      <span class="op">)</span>
+      <span class="op">×</span>
+      <span class="var">( 1 + Margen% )</span>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="grid">
+    <div class="field">
+      <label><span class="dot"></span> Material filamento</label>
+      <select id="material" onchange="calcular()">
+        <option value="0.020">PLA — $20/kg</option>
+        <option value="0.025">PETG — $25/kg</option>
+        <option value="0.035">ABS — $35/kg</option>
+        <option value="0.055">ASA — $55/kg</option>
+        <option value="0.080">PA (Nylon) — $80/kg</option>
+        <option value="0.120">TPU — $120/kg</option>
+        <option value="custom">Precio personalizado</option>
+      </select>
+    </div>
+
+    <div class="field" id="customField" style="display:none">
+      <label><span class="dot"></span> Precio por kg (USD)</label>
+      <div class="input-wrap">
+        <input type="number" id="customPrice" value="30" min="1" step="0.5" oninput="calcular()">
+        <span class="unit">USD/kg</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><span class="dot orange"></span> Gramos impresos</label>
+      <div class="input-wrap">
+        <input type="number" id="gramos" value="50" min="1" step="1" oninput="calcular()">
+        <span class="unit">g</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><span class="dot purple"></span> Tiempo de impresión</label>
+      <div class="input-wrap">
+        <input type="number" id="horas" value="3" min="0" step="0.5" oninput="calcular()">
+        <span class="unit">h</span>
+        <input type="number" id="minutos" value="0" min="0" max="59" step="5" oninput="calcular()">
+        <span class="unit">m</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><span class="dot orange"></span> Costo eléctrico</label>
+      <div class="input-wrap">
+        <input type="number" id="kwh" value="0.10" min="0.01" step="0.01" oninput="calcular()">
+        <span class="unit">USD/kWh</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><span class="dot green"></span> Tu tarifa / hora</label>
+      <div class="input-wrap">
+        <input type="number" id="tarifa" value="5" min="0" step="0.5" oninput="calcular()">
+        <span class="unit">USD/h</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><span class="dot" style="background:#facc15"></span> % Desperdicio / fallas</label>
+      <div class="input-wrap">
+        <input type="number" id="falla" value="10" min="0" max="50" step="1" oninput="calcular()">
+        <span class="unit">%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Margen -->
+  <div class="margin-section">
+    <div class="margin-label">Margen de ganancia</div>
+    <div class="slider-wrap">
+      <input type="range" id="margen" min="0" max="200" value="40" oninput="updateMargen(); calcular()">
+      <div class="slider-val" id="margenVal">40%</div>
+    </div>
+  </div>
+
+  <!-- Resultado -->
+  <div class="result-card">
+    <div class="result-label">// Precio de venta sugerido</div>
+    <div class="result-price" id="resultado">$0.00</div>
+
+    <div class="breakdown">
+      <div class="breakdown-item">
+        <div class="bi-label">Filamento</div>
+        <div class="bi-val bi-material" id="bMat">$0.00</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">Energía (A1 ~0.2 kW)</div>
+        <div class="bi-val bi-energy" id="bEner">$0.00</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">Costo de tiempo</div>
+        <div class="bi-val bi-time" id="bTime">$0.00</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">Fallas / merma</div>
+        <div class="bi-val bi-fail" id="bFail">$0.00</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">Subtotal</div>
+        <div class="bi-val" id="bSub">$0.00</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">Ganancia</div>
+        <div class="bi-val bi-margin" id="bGain">$0.00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info boxes -->
+  <div class="info-grid">
+    <div class="info-box">
+      <strong>⚡ Consumo Bambu A1</strong>
+      La impresora consume aprox. <code>200W</code> en promedio durante la impresión. Para calcular energía: <code>0.2 kW × horas × tarifa kWh</code>.
+    </div>
+    <div class="info-box">
+      <strong>📦 Costo de filamento</strong>
+      Filamento en gramos: <code>gramos / 1000 × precio_por_kg</code>. Recuerda incluir el material de soporte si aplica.
+    </div>
+    <div class="info-box">
+      <strong>⏱️ Tarifa por hora</strong>
+      Incluye tu tiempo de preparación, supervisión y post-proceso. Un rango típico es <code>$3–$15 USD/h</code> según el mercado.
+    </div>
+    <div class="info-box">
+      <strong>📊 Margen recomendado</strong>
+      Para venta al público: <code>40–80%</code>. Para mayoreo: <code>20–40%</code>. Prototipado urgente: <code>80–150%</code>.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const A1_WATTS = 0.2; // kW promedio Bambu A1
+
+  function updateMargen() {
+    document.getElementById('margenVal').textContent = document.getElementById('margen').value + '%';
+  }
+
+  document.getElementById('material').addEventListener('change', function() {
+    document.getElementById('customField').style.display =
+      this.value === 'custom' ? 'flex' : 'none';
+    calcular();
+  });
+
+  function fmt(n) {
+    return '$' + n.toFixed(2);
+  }
+
+  function calcular() {
+    const matSel = document.getElementById('material').value;
+    const pricePerGram = matSel === 'custom'
+      ? (parseFloat(document.getElementById('customPrice').value) || 0) / 1000
+      : parseFloat(matSel);
+
+    const gramos = parseFloat(document.getElementById('gramos').value) || 0;
+    const horas = parseFloat(document.getElementById('horas').value) || 0;
+    const minutos = parseFloat(document.getElementById('minutos').value) || 0;
+    const totalHoras = horas + minutos / 60;
+
+    const kwh = parseFloat(document.getElementById('kwh').value) || 0;
+    const tarifa = parseFloat(document.getElementById('tarifa').value) || 0;
+    const fallaP = (parseFloat(document.getElementById('falla').value) || 0) / 100;
+    const margen = (parseFloat(document.getElementById('margen').value) || 0) / 100;
+
+    const costoMat = gramos * pricePerGram;
+    const costoEner = A1_WATTS * totalHoras * kwh;
+    const costoTiempo = totalHoras * tarifa;
+    const subtotal0 = costoMat + costoEner + costoTiempo;
+    const costoFalla = subtotal0 * fallaP;
+    const subtotal = subtotal0 + costoFalla;
+    const ganancia = subtotal * margen;
+    const total = subtotal + ganancia;
+
+    document.getElementById('bMat').textContent = fmt(costoMat);
+    document.getElementById('bEner').textContent = fmt(costoEner);
+    document.getElementById('bTime').textContent = fmt(costoTiempo);
+    document.getElementById('bFail').textContent = fmt(costoFalla);
+    document.getElementById('bSub').textContent = fmt(subtotal);
+    document.getElementById('bGain').textContent = fmt(ganancia);
+
+    const el = document.getElementById('resultado');
+    el.textContent = fmt(total);
+    el.classList.add('updating');
+    setTimeout(() => el.classList.remove('updating'), 300);
+  }
+
+  calcular();
+</script>
+</body>
+</html>
