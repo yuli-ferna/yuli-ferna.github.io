@@ -446,6 +446,36 @@
     .extra-row { grid-template-columns: 1fr 1fr 58px 28px; }
     .extra-name { grid-column: 1 / -1; }
   }
+
+  .span-compact { grid-column: 1 / -1; }
+
+  /* Desktop: datos a la izquierda en grids más anchas, resultado fijo a la derecha. */
+  @media (min-width: 960px) {
+    .container { max-width: 1180px; padding: 40px 32px 48px; }
+    .formula-note { max-width: 760px; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 400px;
+      column-gap: 28px;
+      align-items: start;
+    }
+    .col-pieza { grid-column: 1; grid-row: 1; }
+    .col-rest { grid-column: 1; grid-row: 2; }
+    .result-card {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      position: sticky;
+      top: 24px;
+      margin-top: 22px;
+    }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .span-compact { grid-column: auto; }
+    .price-bar { display: none; }
+    body { padding-bottom: 0; }
+  }
+  @media (min-width: 1200px) {
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
 </style>
 </head>
 <body>
@@ -469,8 +499,10 @@
     Precio final = (filamento + energía + tiempo) con colchón por fallas, más embalaje y extras, más tu margen de ganancia. Las tasas BCV y Binance solo convierten el resultado a bolívares, no afectan el cálculo en dólares.
   </p>
 
+  <div class="layout">
+  <div class="col-pieza">
   <div class="section-label">Pieza</div>
-  <div class="grid">
+  <div class="grid grid-3">
     <div class="field">
       <label>Gramos por pieza</label>
       <div class="input-wrap">
@@ -489,13 +521,14 @@
       </div>
     </div>
 
-    <div class="field" style="grid-column:1/-1">
+    <div class="field span-compact">
       <label>Cantidad de piezas</label>
       <div class="input-wrap">
         <input type="number" id="cantidad" value="1" min="1" step="1" oninput="calcular()">
         <span class="unit">ud</span>
       </div>
     </div>
+  </div>
   </div>
 
   <div class="result-card">
@@ -541,7 +574,7 @@
     </div>
   </div>
 
-
+  <div class="col-rest">
   <div class="section-label">Filamento</div>
   <div class="grid">
     <div class="field">
@@ -574,7 +607,7 @@
   </div>
 
   <div class="section-label">Costos operativos</div>
-  <div class="grid">
+  <div class="grid grid-4">
     <div class="field">
       <label>Costo eléctrico</label>
       <div class="input-wrap">
@@ -663,6 +696,8 @@
   <p class="params-note">
     Las tasas se cargan solas al abrir la página: BCV desde dolarapi.com y Binance desde el promedio compra/venta de USDT/VES en Binance P2P (criptoya.com). Si no hay conexión se usa la última tasa guardada. Puedes escribir otra tasa a mano cuando quieras; "Actualizar tasas" vuelve a traer las del día.
   </p>
+  </div>
+  </div>
 
 </div>
 
